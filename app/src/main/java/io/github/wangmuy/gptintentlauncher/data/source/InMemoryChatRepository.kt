@@ -1,5 +1,6 @@
 package io.github.wangmuy.gptintentlauncher.data.source
 
+import io.github.wangmuy.gptintentlauncher.Const.DEBUG_TAG
 import io.github.wangmuy.gptintentlauncher.data.model.ChatMessage
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -11,6 +12,7 @@ import java.util.concurrent.atomic.AtomicInteger
 
 class InMemoryChatRepository: ChatRepository {
     companion object {
+        private const val TAG = "InMemoryChatRepository$DEBUG_TAG"
         private val COUNT = AtomicInteger(0)
     }
 

@@ -29,6 +29,7 @@ androidx-compose-ui-test-junit = { group = "androidx.compose.ui", name = "ui-tes
 androidx-compose-ui-tooling-core = { group = "androidx.compose.ui", name = "ui-tooling" }
 androidx-compose-ui-test-manifest = { group = "androidx.compose.ui", name = "ui-test-manifest" }
 wangmuy-llmchain = "io.github.wangmuy.llmchain:core:0.0.1-SNAPSHOT"
+koin-android = "io.insert-koin:koin-android:3.4.3"
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "androidGradlePlugin" }
