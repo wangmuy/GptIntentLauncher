@@ -1,6 +1,7 @@
 package io.github.wangmuy.gptintentlauncher
 
 import android.os.Bundle
+import android.view.WindowManager
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.fillMaxSize
@@ -10,11 +11,16 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import io.github.wangmuy.gptintentlauncher.data.source.InMemoryChatRepository
+import io.github.wangmuy.gptintentlauncher.service.LangChainService
+import io.github.wangmuy.gptintentlauncher.setting.SettingRepository
+import io.github.wangmuy.gptintentlauncher.ui.App
 import io.github.wangmuy.gptintentlauncher.ui.theme.GptIntentLauncherTheme
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE)
         setContent {
             GptIntentLauncherTheme {
                 // A surface container using the 'background' color from the theme
@@ -22,25 +28,9 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    Greeting("Android")
+                    App(InMemoryChatRepository(), LangChainService(), SettingRepository())
                 }
             }
         }
-    }
-}
-
-@Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
-}
-
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    GptIntentLauncherTheme {
-        Greeting("Android")
     }
 }
