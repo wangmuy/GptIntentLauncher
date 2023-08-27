@@ -1,6 +1,7 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
+    alias(libs.plugins.ksp)
 }
 
 android {
@@ -30,11 +31,11 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
+        sourceCompatibility = JavaVersion.VERSION_11
+        targetCompatibility = JavaVersion.VERSION_11
     }
     kotlinOptions {
-        jvmTarget = "1.8"
+        jvmTarget = libs.versions.jdkVersion.get()
     }
     buildFeatures {
         compose = true
@@ -49,6 +50,10 @@ android {
     }
 }
 
+kotlin {
+    jvmToolchain(libs.versions.jdkVersion.get().toInt())
+}
+
 dependencies {
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
@@ -60,6 +65,11 @@ dependencies {
     implementation(libs.androidx.compose.material3)
     implementation(libs.wangmuy.llmchain)
     implementation(libs.koin.android)
+    implementation(libs.androidx.room.runtime)
+    annotationProcessor(libs.androidx.room.compiler)
+    ksp(libs.androidx.room.compiler)
+    implementation(libs.androidx.room.ktx)
+    testImplementation(libs.androidx.room.testing)
 
     testImplementation(libs.junit4)
     androidTestImplementation(libs.androidx.test.ext)

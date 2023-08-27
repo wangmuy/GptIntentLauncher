@@ -1,4 +1,5 @@
 [versions]
+jdkVersion = "11"
 compileSdk = "33"
 minSdk = "27"
 targetSdk = "33"
@@ -12,6 +13,8 @@ androidxComposeBom = "2023.03.00"
 junit4 = "4.13.2"
 androidxTestExt = "1.1.5"
 androidxEspresso = "3.5.1"
+androidXRoom = "2.5.2"
+ksp = "1.8.10-1.0.9"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "androidxCore" }
@@ -30,7 +33,12 @@ androidx-compose-ui-tooling-core = { group = "androidx.compose.ui", name = "ui-t
 androidx-compose-ui-test-manifest = { group = "androidx.compose.ui", name = "ui-test-manifest" }
 wangmuy-llmchain = "io.github.wangmuy.llmchain:core:0.0.1-SNAPSHOT"
 koin-android = "io.insert-koin:koin-android:3.4.3"
+androidx-room-runtime = { group = "androidx.room", name = "room-runtime", version.ref = "androidXRoom" }
+androidx-room-compiler = { group = "androidx.room", name = "room-compiler", version.ref = "androidXRoom" }
+androidx-room-ktx = { group = "androidx.room", name = "room-ktx", version.ref = "androidXRoom" }
+androidx-room-testing = { group = "androidx.room", name = "room-testing", version.ref = "androidXRoom" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "androidGradlePlugin" }
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
+ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }

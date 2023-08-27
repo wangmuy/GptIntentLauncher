@@ -2,22 +2,36 @@ package io.github.wangmuy.gptintentlauncher.data.source
 
 import io.github.wangmuy.gptintentlauncher.Const.DEBUG_TAG
 import io.github.wangmuy.gptintentlauncher.data.model.ChatMessage
+import io.github.wangmuy.gptintentlauncher.data.source.local.ChatMessageDao
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.withContext
 
-class DefaultChatRepository: ChatRepository {
+class DefaultChatRepository(
+    private val localDataSource: ChatMessageDao,
+    private val dispatcher: CoroutineDispatcher,
+//    val scope: CoroutineScope
+): ChatRepository {
     companion object {
         private const val TAG = "DefaultChatRepository$DEBUG_TAG"
     }
 
     override suspend fun getMessages(): List<ChatMessage> {
-        TODO("Not yet implemented")
+        return withContext(dispatcher) {
+            localDataSource.getAll().toExternal()
+        }
     }
 
     override fun getMessageStream(): Flow<List<ChatMessage>> {
-        TODO("Not yet implemented")
+        return localDataSource.observeAll().map {messages->
+            withContext(dispatcher) {
+                messages.toExternal()
+            }
+        }
     }
 
     override suspend fun addMessage(message: ChatMessage) {
-        TODO("Not yet implemented")
+        localDataSource.insert(message.toLocal())
     }
 }

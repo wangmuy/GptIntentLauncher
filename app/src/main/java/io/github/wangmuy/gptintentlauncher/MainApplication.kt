@@ -12,6 +12,7 @@ import org.koin.core.context.startKoin
 
 class MainApplication: Application() {
     private val appModules = listOf(
+        coroutinesModule,
         dataModule,
         navigationModule,
         chatServiceModule,
