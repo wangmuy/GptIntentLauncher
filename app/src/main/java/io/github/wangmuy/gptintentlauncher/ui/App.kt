@@ -8,9 +8,18 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.tooling.preview.Preview
 import io.github.wangmuy.gptintentlauncher.chat.ChatScreen
 import io.github.wangmuy.gptintentlauncher.chat.ChatScreenViewModel
+import io.github.wangmuy.gptintentlauncher.data.model.ChatConfig
+import io.github.wangmuy.gptintentlauncher.data.model.ChatMessage
+import io.github.wangmuy.gptintentlauncher.data.source.ChatRepository
+import io.github.wangmuy.gptintentlauncher.data.suspendRunCatching
+import io.github.wangmuy.gptintentlauncher.service.ChatService
+import io.github.wangmuy.gptintentlauncher.setting.SettingDataSource
 import io.github.wangmuy.gptintentlauncher.setting.SettingScreen
 import io.github.wangmuy.gptintentlauncher.setting.SettingScreenViewModel
 import io.github.wangmuy.gptintentlauncher.ui.theme.GptIntentLauncherTheme
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -51,10 +60,51 @@ fun App(
     }
 }
 
-//@Preview(showBackground = true)
-//@Composable
-//fun GreetingPreview() {
-//    GptIntentLauncherTheme {
-//        App(NavigationViewModel(), ChatScreenViewModel(), SettingScreenViewModel())
-//    }
-//}
+@Preview(showBackground = true)
+@Composable
+fun GreetingPreview() {
+    // todo https://insert-koin.io/docs/reference/koin-compose/multiplatform
+    val emptyChatRepository = object: ChatRepository {
+        override suspend fun getMessages(): List<ChatMessage> {
+            return listOf(ChatMessage(role = ChatMessage.ROLE_BOT, content = "hello"))
+        }
+
+        override fun getMessageStream(): Flow<List<ChatMessage>> {
+            return MutableStateFlow(ArrayList())
+        }
+
+        override suspend fun addMessage(message: ChatMessage) {
+        }
+    }
+    val emptyChatService = object: ChatService {
+        override fun setService(apiKey: String, baseUrl: String, timeoutMillis: Long, proxy: String?) {
+        }
+
+        override fun setLLMConfig(configs: Map<String, Any>) {
+        }
+
+        override suspend fun sendMessage(message: ChatMessage): Result<ChatMessage> = suspendRunCatching(
+            Dispatchers.Default) {
+            ChatMessage(role = ChatMessage.ROLE_BOT, content = "this is reply")
+        }
+    }
+    val emptySettingDataSource = object: SettingDataSource {
+        override suspend fun getConfig(): ChatConfig {
+            return ChatConfig()
+        }
+
+        override fun getConfigStream(): Flow<ChatConfig> {
+            return MutableStateFlow(ChatConfig())
+        }
+
+        override suspend fun saveConfig(config: ChatConfig) {
+        }
+    }
+    GptIntentLauncherTheme {
+        App(
+            NavigationViewModel(),
+            ChatScreenViewModel(emptyChatRepository, emptyChatService),
+            SettingScreenViewModel(emptyChatService, emptySettingDataSource)
+        )
+    }
+}
