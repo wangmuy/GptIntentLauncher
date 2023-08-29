@@ -6,6 +6,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.tooling.preview.Preview
+import io.github.wangmuy.gptintentlauncher.allapps.AllAppsScreen
+import io.github.wangmuy.gptintentlauncher.allapps.AllAppsScreenViewModel
+import io.github.wangmuy.gptintentlauncher.allapps.AppsRepository
+import io.github.wangmuy.gptintentlauncher.allapps.PackageInfo
 import io.github.wangmuy.gptintentlauncher.chat.ChatScreen
 import io.github.wangmuy.gptintentlauncher.chat.ChatScreenViewModel
 import io.github.wangmuy.gptintentlauncher.data.model.ChatConfig
@@ -26,6 +30,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 fun App(
     navigationViewModel: NavigationViewModel,
     chatViewModel: ChatScreenViewModel,
+    allAppsViewModel: AllAppsScreenViewModel,
     settingViewModel: SettingScreenViewModel
 ) {
     val navigationState by navigationViewModel.navigationState.collectAsState()
@@ -51,7 +56,7 @@ fun App(
                 ChatScreen(contentPadding, chatViewModel)
             }
             NavigationViewModel.SCREEN_ALLAPPS -> {
-                ;
+                AllAppsScreen(contentPadding, allAppsViewModel)
             }
             NavigationViewModel.SCREEN_SETTING -> {
                 SettingScreen(contentPadding, settingViewModel)
@@ -88,6 +93,15 @@ fun GreetingPreview() {
             ChatMessage(role = ChatMessage.ROLE_BOT, content = "this is reply")
         }
     }
+    val emptyAllAppsRepository = object: AppsRepository {
+        override suspend fun getApps(): Map<String, PackageInfo> {
+            return emptyMap()
+        }
+
+        override fun getAppsStream(): Flow<Map<String, PackageInfo>> {
+            return MutableStateFlow(HashMap())
+        }
+    }
     val emptySettingDataSource = object: SettingDataSource {
         override suspend fun getConfig(): ChatConfig {
             return ChatConfig()
@@ -104,6 +118,7 @@ fun GreetingPreview() {
         App(
             NavigationViewModel(),
             ChatScreenViewModel(emptyChatRepository, emptyChatService),
+            AllAppsScreenViewModel(emptyAllAppsRepository),
             SettingScreenViewModel(emptyChatService, emptySettingDataSource)
         )
     }

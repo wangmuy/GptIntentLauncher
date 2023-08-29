@@ -4,6 +4,7 @@ import io.github.wangmuy.gptintentlauncher.Const.DEBUG_TAG
 import io.github.wangmuy.gptintentlauncher.data.model.ChatMessage
 import io.github.wangmuy.gptintentlauncher.data.source.local.ChatMessageDao
 import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
@@ -11,7 +12,7 @@ import kotlinx.coroutines.withContext
 class DefaultChatRepository(
     private val localDataSource: ChatMessageDao,
     private val dispatcher: CoroutineDispatcher,
-//    val scope: CoroutineScope
+    val scope: CoroutineScope
 ): ChatRepository {
     companion object {
         private const val TAG = "DefaultChatRepository$DEBUG_TAG"

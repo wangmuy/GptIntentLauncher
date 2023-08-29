@@ -1,6 +1,7 @@
 package io.github.wangmuy.gptintentlauncher
 
 import android.app.Application
+import io.github.wangmuy.gptintentlauncher.allapps.allAppsModule
 import io.github.wangmuy.gptintentlauncher.chat.chatModule
 import io.github.wangmuy.gptintentlauncher.data.dataModule
 import io.github.wangmuy.gptintentlauncher.service.chatServiceModule
@@ -17,6 +18,7 @@ class MainApplication: Application() {
         navigationModule,
         chatServiceModule,
         chatModule,
+        allAppsModule,
         settingModule
     )
 

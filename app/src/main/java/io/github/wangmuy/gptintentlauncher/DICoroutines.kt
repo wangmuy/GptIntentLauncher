@@ -7,12 +7,13 @@ import kotlinx.coroutines.SupervisorJob
 import org.koin.core.qualifier.named
 import org.koin.dsl.module
 
-const val DISPATCHER_IO = "IO"
-const val DISPATCHER_DEFAULT = "Default"
+const val IO = "IO"
+const val DEFAULT = "Default"
 
 val coroutinesModule = module {
-    single(named(DISPATCHER_IO)) { Dispatchers.IO }
-    single(named(DISPATCHER_DEFAULT)) { Dispatchers.Default }
-    single { (dispatcher: CoroutineDispatcher) ->
-        CoroutineScope(SupervisorJob() + dispatcher) }
+    single(named(IO)) { Dispatchers.IO }
+    single(named(DEFAULT)) { Dispatchers.Default }
+    single(named(DEFAULT)) {
+        CoroutineScope(SupervisorJob() + get<CoroutineDispatcher>(named(DEFAULT)))
+    }
 }

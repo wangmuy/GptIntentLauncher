@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
+import io.github.wangmuy.gptintentlauncher.allapps.AllAppsScreenViewModel
 import io.github.wangmuy.gptintentlauncher.chat.ChatScreenViewModel
 import io.github.wangmuy.gptintentlauncher.setting.SettingScreenViewModel
 import io.github.wangmuy.gptintentlauncher.ui.App
@@ -18,6 +19,7 @@ import org.koin.android.ext.android.inject
 class MainActivity : ComponentActivity() {
     private val navigationViewModel: NavigationViewModel by inject()
     private val chatViewModel: ChatScreenViewModel by inject()
+    private val allAppsViewModel: AllAppsScreenViewModel by inject()
     private val settingViewModel: SettingScreenViewModel by inject()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -30,7 +32,7 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    App(navigationViewModel, chatViewModel, settingViewModel)
+                    App(navigationViewModel, chatViewModel, allAppsViewModel, settingViewModel)
                 }
             }
         }
