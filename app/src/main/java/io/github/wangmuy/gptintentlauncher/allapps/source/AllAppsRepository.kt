@@ -4,6 +4,9 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.content.pm.LauncherApps
 import android.content.pm.LauncherApps.ShortcutQuery
+import android.graphics.Rect
+import android.os.Bundle
+import android.os.Process
 import android.os.UserHandle
 import android.util.DisplayMetrics
 import android.util.Log
@@ -59,7 +62,7 @@ class AllAppsRepository(
                         .launcherActivities.add(activityInfo)
                 }
             }
-            try {
+            if (launcherApps.hasShortcutHostPermission()) {
                 for (userHandle in launcherApps.profiles) {
                     for (pkgName in packageInfoMap.keys) {
                         val shortcutQuery = ShortcutQuery()
@@ -76,8 +79,8 @@ class AllAppsRepository(
                         }
                     }
                 }
-            } catch (e: Exception) {
-                Log.e(TAG, "failed to get shortcuts", e)
+            } else {
+                Log.d(TAG, "hasShortcutHostPermission==false")
             }
             Log.d(TAG, "refreshApps end")
             packageInfoMap
@@ -93,6 +96,12 @@ class AllAppsRepository(
 
     override fun getAppsStream(): Flow<Map<String, PackageInfo>> {
         return observableApps
+    }
+
+    override fun startActivity(activityInfo: ActivityInfo, viewBounds: Rect?, opts: Bundle?) {
+        launcherApps.startMainActivity(
+            activityInfo.activityInfo.componentName,
+            Process.myUserHandle(), viewBounds, opts)
     }
 
     override fun onPackageRemoved(packageName: String?, user: UserHandle?) {

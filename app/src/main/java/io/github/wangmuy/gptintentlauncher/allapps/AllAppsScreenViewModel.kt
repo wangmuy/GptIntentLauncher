@@ -1,5 +1,7 @@
 package io.github.wangmuy.gptintentlauncher.allapps
 
+import android.graphics.Rect
+import android.os.Bundle
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -30,7 +32,8 @@ class AllAppsScreenViewModel(
             initialValue = Async.Loading
         )
 
-    fun onStartActivity(activityInfo: ActivityInfo) {
-        Log.d(TAG, "onStartActivity $activityInfo")
+    fun onStartActivity(activityInfo: ActivityInfo, viewBounds: Rect?, opts: Bundle? = null) {
+        Log.d(TAG, "onStartActivity $activityInfo, viewBounds=$viewBounds, opts=$opts")
+        allAppsRepository.startActivity(activityInfo, viewBounds, opts)
     }
 }
