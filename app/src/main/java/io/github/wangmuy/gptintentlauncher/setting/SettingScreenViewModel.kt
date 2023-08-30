@@ -3,9 +3,10 @@ package io.github.wangmuy.gptintentlauncher.setting
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.wangmuy.llmchain.llm.BaseLLM
-import com.wangmuy.llmchain.serviceprovider.openai.OpenAIChat
-import io.github.wangmuy.gptintentlauncher.data.model.ChatConfig
-import io.github.wangmuy.gptintentlauncher.service.ChatService
+import io.github.wangmuy.gptintentlauncher.setting.model.ChatConfig
+import io.github.wangmuy.gptintentlauncher.chat.service.ChatService
+import io.github.wangmuy.gptintentlauncher.setting.source.SettingDataSource
+import io.github.wangmuy.gptintentlauncher.setting.source.SettingRepository
 import io.github.wangmuy.gptintentlauncher.util.Async
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted

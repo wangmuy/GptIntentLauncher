@@ -2,9 +2,9 @@ package io.github.wangmuy.gptintentlauncher.chat
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import io.github.wangmuy.gptintentlauncher.data.model.ChatMessage
-import io.github.wangmuy.gptintentlauncher.data.source.ChatRepository
-import io.github.wangmuy.gptintentlauncher.service.ChatService
+import io.github.wangmuy.gptintentlauncher.chat.model.ChatMessage
+import io.github.wangmuy.gptintentlauncher.chat.source.ChatRepository
+import io.github.wangmuy.gptintentlauncher.chat.service.ChatService
 import io.github.wangmuy.gptintentlauncher.util.Async
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted

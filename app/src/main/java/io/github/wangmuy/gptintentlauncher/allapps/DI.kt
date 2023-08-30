@@ -1,6 +1,8 @@
 package io.github.wangmuy.gptintentlauncher.allapps
 
 import io.github.wangmuy.gptintentlauncher.DEFAULT
+import io.github.wangmuy.gptintentlauncher.allapps.source.AllAppsRepository
+import io.github.wangmuy.gptintentlauncher.allapps.source.AppsRepository
 import org.koin.core.qualifier.named
 import org.koin.dsl.module
 

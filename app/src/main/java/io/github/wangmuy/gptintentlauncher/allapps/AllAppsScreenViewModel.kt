@@ -4,6 +4,9 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import io.github.wangmuy.gptintentlauncher.Const.DEBUG_TAG
+import io.github.wangmuy.gptintentlauncher.allapps.model.ActivityInfo
+import io.github.wangmuy.gptintentlauncher.allapps.model.PackageInfo
+import io.github.wangmuy.gptintentlauncher.allapps.source.AppsRepository
 import io.github.wangmuy.gptintentlauncher.util.Async
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
