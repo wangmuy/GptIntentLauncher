@@ -37,6 +37,9 @@ androidx-room-runtime = { group = "androidx.room", name = "room-runtime", versio
 androidx-room-compiler = { group = "androidx.room", name = "room-compiler", version.ref = "androidXRoom" }
 androidx-room-ktx = { group = "androidx.room", name = "room-ktx", version.ref = "androidXRoom" }
 androidx-room-testing = { group = "androidx.room", name = "room-testing", version.ref = "androidXRoom" }
+# https://developer.android.com/jetpack/compose/bom/bom-mapping
+google-accompanist = "com.google.accompanist:accompanist-drawablepainter:0.30.1"
+arthurivanets-scraper = "com.arthurivanets:google-play-scraper:1.1.2"
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "androidGradlePlugin" }

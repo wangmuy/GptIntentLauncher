@@ -69,9 +69,12 @@ dependencies {
     annotationProcessor(libs.androidx.room.compiler)
     ksp(libs.androidx.room.compiler)
     implementation(libs.androidx.room.ktx)
-    testImplementation(libs.androidx.room.testing)
+    implementation(libs.google.accompanist)
+    implementation(libs.arthurivanets.scraper)
 
+    testImplementation(libs.androidx.room.testing)
     testImplementation(libs.junit4)
+
     androidTestImplementation(libs.androidx.test.ext)
     androidTestImplementation(libs.androidx.test.espresso.core)
     androidTestImplementation(platform(libs.androidx.compose.bom))
