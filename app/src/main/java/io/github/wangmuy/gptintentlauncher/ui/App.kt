@@ -10,7 +10,9 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.tooling.preview.Preview
 import io.github.wangmuy.gptintentlauncher.allapps.AllAppsScreenViewModel
 import io.github.wangmuy.gptintentlauncher.allapps.model.ActivityInfo
+import io.github.wangmuy.gptintentlauncher.allapps.model.AppInfo
 import io.github.wangmuy.gptintentlauncher.allapps.model.PackageInfo
+import io.github.wangmuy.gptintentlauncher.allapps.service.AppStoreService
 import io.github.wangmuy.gptintentlauncher.allapps.source.AppsRepository
 import io.github.wangmuy.gptintentlauncher.allapps.ui.AllAppsScreen
 import io.github.wangmuy.gptintentlauncher.chat.ChatScreenViewModel
@@ -108,6 +110,18 @@ fun GreetingPreview() {
         override fun startActivity(activityInfo: ActivityInfo, viewBounds: Rect?, opts: Bundle?) {
         }
     }
+    val emptyAppStoreService = object: AppStoreService {
+        override suspend fun getAppInfo(pkgName: String): Result<AppInfo> {
+            val appInfo = AppInfo("sampleApp",
+                "sampleApp",
+                    "",
+                    "",
+                    "",
+                    "",
+                )
+            return Result.success(appInfo)
+        }
+    }
     val emptySettingDataSource = object: SettingDataSource {
         override suspend fun getConfig(): ChatConfig {
             return ChatConfig()
@@ -124,7 +138,7 @@ fun GreetingPreview() {
         App(
             NavigationViewModel(),
             ChatScreenViewModel(emptyChatRepository, emptyChatService),
-            AllAppsScreenViewModel(emptyAllAppsRepository),
+            AllAppsScreenViewModel(emptyAllAppsRepository, emptyAppStoreService),
             SettingScreenViewModel(emptyChatService, emptySettingDataSource)
         )
     }

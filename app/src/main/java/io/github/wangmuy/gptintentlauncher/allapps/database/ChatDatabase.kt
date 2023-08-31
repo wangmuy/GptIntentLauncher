@@ -1,7 +1,9 @@
-package io.github.wangmuy.gptintentlauncher.chat.source.local
+package io.github.wangmuy.gptintentlauncher.allapps.database
 
 import androidx.room.Database
 import androidx.room.RoomDatabase
+import io.github.wangmuy.gptintentlauncher.chat.source.local.ChatMessageDao
+import io.github.wangmuy.gptintentlauncher.chat.source.local.LocalChatMessage
 
 @Database(
     entities = [LocalChatMessage::class],

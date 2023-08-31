@@ -8,6 +8,7 @@ import androidx.lifecycle.viewModelScope
 import io.github.wangmuy.gptintentlauncher.Const.DEBUG_TAG
 import io.github.wangmuy.gptintentlauncher.allapps.model.ActivityInfo
 import io.github.wangmuy.gptintentlauncher.allapps.model.PackageInfo
+import io.github.wangmuy.gptintentlauncher.allapps.service.AppStoreService
 import io.github.wangmuy.gptintentlauncher.allapps.source.AppsRepository
 import io.github.wangmuy.gptintentlauncher.util.Async
 import kotlinx.coroutines.flow.SharingStarted
@@ -17,7 +18,8 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 
 class AllAppsScreenViewModel(
-    private val allAppsRepository: AppsRepository
+    private val allAppsRepository: AppsRepository,
+    private val appStoreService: AppStoreService
 ): ViewModel() {
     companion object {
         private const val TAG = "AllAppsScreenViewModel$DEBUG_TAG"
@@ -35,5 +37,9 @@ class AllAppsScreenViewModel(
     fun onStartActivity(activityInfo: ActivityInfo, viewBounds: Rect?, opts: Bundle? = null) {
         Log.d(TAG, "onStartActivity $activityInfo, viewBounds=$viewBounds, opts=$opts")
         allAppsRepository.startActivity(activityInfo, viewBounds, opts)
+//        viewModelScope.launch {
+//            val appInfo = appStoreService.getAppInfo(activityInfo.activityInfo.applicationInfo.packageName)
+//            Log.d(TAG, "appInfo=$appInfo")
+//        }
     }
 }
