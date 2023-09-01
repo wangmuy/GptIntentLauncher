@@ -1,6 +1,7 @@
 package io.github.wangmuy.gptintentlauncher.allapps.model
 
-class AppInfo(
+/** app info from store */
+class PackageStoreInfo(
     val pkgName: String,
     val title: String,
     val descriptionHtml: String,
@@ -17,6 +18,6 @@ class AppInfo(
 //    val lastUpdateChangelog: String,
 ) {
     override fun toString(): String {
-        return "AppInfo(pkgName='$pkgName', title='$title', descriptionHtml='$descriptionHtml', summary='$summary', genre='$genre', familyGenre=$familyGenre)"
+        return "PackageStoreInfo(pkgName='$pkgName', title='$title', descriptionHtml='$descriptionHtml', summary='$summary', genre='$genre', familyGenre=$familyGenre)"
     }
 }

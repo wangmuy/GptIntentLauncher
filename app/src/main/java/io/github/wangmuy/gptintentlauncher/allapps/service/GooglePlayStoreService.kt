@@ -5,12 +5,10 @@ import com.arthurivanets.googleplayscraper.GooglePlayScraper
 import com.arthurivanets.googleplayscraper.HumanBehaviorRequestThrottler
 import com.arthurivanets.googleplayscraper.requests.GetAppDetailsParams
 import io.github.wangmuy.gptintentlauncher.Const.DEBUG_TAG
-import io.github.wangmuy.gptintentlauncher.allapps.model.AppInfo
+import io.github.wangmuy.gptintentlauncher.allapps.model.PackageStoreInfo
 import io.github.wangmuy.gptintentlauncher.util.suspendRunCatching
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
-import java.net.InetSocketAddress
-import java.net.Proxy
 
 class GooglePlayStoreService(
     private val dispatcher: CoroutineDispatcher = Dispatchers.Default
@@ -33,7 +31,7 @@ class GooglePlayStoreService(
         val response = scraper.getAppDetails(params).execute()
         if (response.isSuccess) {
             val details = response.requireResult()
-            AppInfo(
+            PackageStoreInfo(
                 pkgName,
                 details.title,
                 details.descriptionHtml,

@@ -8,14 +8,14 @@ import androidx.room.PrimaryKey
 data class LocalChatMessage(
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "_id")
-    val id: Int,
+    var id: Int = 0,
 
     @ColumnInfo(name = "role")
-    var role: String,
+    var role: String = "",
 
     @ColumnInfo(name = "content")
-    var content: String,
+    var content: String = "",
 
     @ColumnInfo(name = "createdAt")
-    val createdAt: Long
+    val createdAt: Long = System.currentTimeMillis()
 )

@@ -10,7 +10,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.tooling.preview.Preview
 import io.github.wangmuy.gptintentlauncher.allapps.AllAppsScreenViewModel
 import io.github.wangmuy.gptintentlauncher.allapps.model.ActivityInfo
-import io.github.wangmuy.gptintentlauncher.allapps.model.AppInfo
+import io.github.wangmuy.gptintentlauncher.allapps.model.PackageStoreInfo
 import io.github.wangmuy.gptintentlauncher.allapps.model.PackageInfo
 import io.github.wangmuy.gptintentlauncher.allapps.service.AppStoreService
 import io.github.wangmuy.gptintentlauncher.allapps.source.AppsRepository
@@ -111,15 +111,15 @@ fun GreetingPreview() {
         }
     }
     val emptyAppStoreService = object: AppStoreService {
-        override suspend fun getAppInfo(pkgName: String): Result<AppInfo> {
-            val appInfo = AppInfo("sampleApp",
+        override suspend fun getAppInfo(pkgName: String): Result<PackageStoreInfo> {
+            val psi = PackageStoreInfo("sampleApp",
                 "sampleApp",
                     "",
                     "",
                     "",
                     "",
                 )
-            return Result.success(appInfo)
+            return Result.success(psi)
         }
     }
     val emptySettingDataSource = object: SettingDataSource {

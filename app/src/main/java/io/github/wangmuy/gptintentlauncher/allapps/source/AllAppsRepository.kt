@@ -13,6 +13,7 @@ import android.util.Log
 import io.github.wangmuy.gptintentlauncher.Const.DEBUG_TAG
 import io.github.wangmuy.gptintentlauncher.allapps.model.ActivityInfo
 import io.github.wangmuy.gptintentlauncher.allapps.model.PackageInfo
+import io.github.wangmuy.gptintentlauncher.allapps.service.AppStoreService
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
@@ -26,6 +27,8 @@ import kotlinx.coroutines.withContext
 
 class AllAppsRepository(
     private val context: Context,
+    private val packageStoreInfoDao: PackageStoreInfoDao,
+    private val appStoreService: AppStoreService,
     private val dispatcher: CoroutineDispatcher,
     private val scope: CoroutineScope
 ): AppsRepository, LauncherApps.Callback() {
@@ -47,6 +50,26 @@ class AllAppsRepository(
         }
     }
 
+    private fun makePackageInfo(pkgName: String): PackageInfo {
+        val pkgInfo = PackageInfo(pkgName)
+        scope.launch(dispatcher) {
+            val localInfo = packageStoreInfoDao.get(pkgName)
+            if (localInfo == null) {
+                appStoreService.getAppInfo(pkgName)
+                    .onSuccess {
+                        Log.d(TAG, "get appInfo=$it")
+                        pkgInfo.storeInfo = it
+                        packageStoreInfoDao.insert(it.toLocal())
+                    }
+                    .onFailure {
+                        Log.e(TAG, "failed to get appInfo from store", it)
+                    }
+            }
+            // else if somehow outdated, then update
+        }
+        return pkgInfo
+    }
+
     @SuppressLint("InlinedApi")
     private suspend fun refreshApps() {
         val pkgInfos = withContext(dispatcher) {
@@ -58,7 +81,7 @@ class AllAppsRepository(
                     val pkgName = app.applicationInfo.packageName
                     val activityInfo = ActivityInfo(
                         app, app.label.toString(), app.getIcon(DisplayMetrics.DENSITY_DEFAULT))
-                    packageInfoMap.getOrPut(pkgName) { PackageInfo(pkgName) }
+                    packageInfoMap.getOrPut(pkgName) { makePackageInfo(pkgName) }
                         .launcherActivities.add(activityInfo)
                 }
             }
@@ -115,7 +138,7 @@ class AllAppsRepository(
         _appsMSF.update {map->
             val apps = launcherApps.getActivityList(packageName, user)
             val activities =
-                map.getOrPut(packageName) { PackageInfo(packageName) }.launcherActivities
+                map.getOrPut(packageName) { makePackageInfo(packageName) }.launcherActivities
             activities.clear()
             activities.addAll(apps.map {app->
                 ActivityInfo(app, app.label.toString(), app.getIcon(DisplayMetrics.DENSITY_DEFAULT)) })
