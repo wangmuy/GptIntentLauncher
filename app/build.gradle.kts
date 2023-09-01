@@ -70,7 +70,9 @@ dependencies {
     ksp(libs.androidx.room.compiler)
     implementation(libs.androidx.room.ktx)
     implementation(libs.google.accompanist)
-    implementation(libs.arthurivanets.scraper)
+    implementation(project(":google-play-scraper"))
+    implementation(platform(libs.okhttp.bom))
+    implementation(libs.okhttp)
 
     testImplementation(libs.androidx.room.testing)
     testImplementation(libs.junit4)

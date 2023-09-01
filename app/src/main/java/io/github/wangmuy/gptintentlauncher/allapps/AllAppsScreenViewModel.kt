@@ -37,9 +37,5 @@ class AllAppsScreenViewModel(
     fun onStartActivity(activityInfo: ActivityInfo, viewBounds: Rect?, opts: Bundle? = null) {
         Log.d(TAG, "onStartActivity $activityInfo, viewBounds=$viewBounds, opts=$opts")
         allAppsRepository.startActivity(activityInfo, viewBounds, opts)
-//        viewModelScope.launch {
-//            val appInfo = appStoreService.getAppInfo(activityInfo.activityInfo.applicationInfo.packageName)
-//            Log.d(TAG, "appInfo=$appInfo")
-//        }
     }
 }

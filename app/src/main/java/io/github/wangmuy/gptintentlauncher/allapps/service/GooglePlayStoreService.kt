@@ -9,6 +9,8 @@ import io.github.wangmuy.gptintentlauncher.allapps.model.AppInfo
 import io.github.wangmuy.gptintentlauncher.util.suspendRunCatching
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
+import java.net.InetSocketAddress
+import java.net.Proxy
 
 class GooglePlayStoreService(
     private val dispatcher: CoroutineDispatcher = Dispatchers.Default
@@ -17,10 +19,12 @@ class GooglePlayStoreService(
         private const val TAG = "GooglePlayStoreService$DEBUG_TAG"
     }
 
+    private val scraperConfig = GooglePlayScraper.Config(
+        throttler = HumanBehaviorRequestThrottler()
+    )
     private val scraper = GooglePlayScraper(
-        GooglePlayScraper.Config(
-            throttler = HumanBehaviorRequestThrottler()
-        )
+        config = scraperConfig,
+//        proxy = Proxy(Proxy.Type.SOCKS, InetSocketAddress("127.0.0.1", 1090))
     )
 
     override suspend fun getAppInfo(pkgName: String) = suspendRunCatching(dispatcher) {

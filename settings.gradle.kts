@@ -17,4 +17,4 @@ dependencyResolutionManagement {
 
 rootProject.name = "GptIntentLauncher"
 include(":app")
- 
+include(":google-play-scraper")
