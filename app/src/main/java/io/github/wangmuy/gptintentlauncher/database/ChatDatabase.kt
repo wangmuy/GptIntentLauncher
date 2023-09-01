@@ -1,4 +1,4 @@
-package io.github.wangmuy.gptintentlauncher.allapps.database
+package io.github.wangmuy.gptintentlauncher.database
 
 import androidx.room.Database
 import androidx.room.RoomDatabase

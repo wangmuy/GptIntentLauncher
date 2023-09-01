@@ -2,7 +2,7 @@ package io.github.wangmuy.gptintentlauncher
 
 import android.app.Application
 import io.github.wangmuy.gptintentlauncher.allapps.allAppsModule
-import io.github.wangmuy.gptintentlauncher.allapps.database.databaseModule
+import io.github.wangmuy.gptintentlauncher.database.databaseModule
 import io.github.wangmuy.gptintentlauncher.chat.chatModule
 import io.github.wangmuy.gptintentlauncher.chat.chatServiceModule
 import io.github.wangmuy.gptintentlauncher.chat.chatDataModule

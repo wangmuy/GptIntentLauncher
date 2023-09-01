@@ -2,7 +2,7 @@ package io.github.wangmuy.gptintentlauncher.chat
 
 import io.github.wangmuy.gptintentlauncher.DEFAULT
 import io.github.wangmuy.gptintentlauncher.IO
-import io.github.wangmuy.gptintentlauncher.allapps.database.ChatDatabase
+import io.github.wangmuy.gptintentlauncher.database.ChatDatabase
 import io.github.wangmuy.gptintentlauncher.chat.service.ChatService
 import io.github.wangmuy.gptintentlauncher.chat.service.LangChainService
 import io.github.wangmuy.gptintentlauncher.chat.source.ChatRepository
