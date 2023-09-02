@@ -26,5 +26,5 @@ val chatServiceModule = module {
 }
 
 val chatModule = module {
-    factory { ChatScreenViewModel(get(qualifier = named(DEFAULT)), get()) }
+    factory { ChatScreenViewModel(get(qualifier = named(DEFAULT)), get(), get()) }
 }

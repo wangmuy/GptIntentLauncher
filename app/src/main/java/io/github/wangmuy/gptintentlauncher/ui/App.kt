@@ -137,7 +137,7 @@ fun GreetingPreview() {
     GptIntentLauncherTheme {
         App(
             NavigationViewModel(),
-            ChatScreenViewModel(emptyChatRepository, emptyChatService),
+            ChatScreenViewModel(emptyChatRepository, emptyChatService, emptyAllAppsRepository),
             AllAppsScreenViewModel(emptyAllAppsRepository, emptyAppStoreService),
             SettingScreenViewModel(emptyChatService, emptySettingDataSource)
         )

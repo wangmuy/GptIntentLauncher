@@ -10,6 +10,7 @@ import android.os.Process
 import android.os.UserHandle
 import android.util.DisplayMetrics
 import android.util.Log
+import com.arthurivanets.googleplayscraper.util.ScraperError
 import io.github.wangmuy.gptintentlauncher.Const.DEBUG_TAG
 import io.github.wangmuy.gptintentlauncher.allapps.model.ActivityInfo
 import io.github.wangmuy.gptintentlauncher.allapps.model.PackageInfo
@@ -24,6 +25,7 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import java.util.concurrent.atomic.AtomicInteger
 
 class AllAppsRepository(
     private val context: Context,
@@ -34,6 +36,8 @@ class AllAppsRepository(
 ): AppsRepository, LauncherApps.Callback() {
     companion object {
         private const val TAG = "AllAppsRepository$DEBUG_TAG"
+
+        private const val MAX_GET_FROM_STORE = 5
     }
 
     private val launcherApps: LauncherApps =
@@ -50,11 +54,13 @@ class AllAppsRepository(
         }
     }
 
+    private val count = AtomicInteger(0)
+
     private fun makePackageInfo(pkgName: String): PackageInfo {
         val pkgInfo = PackageInfo(pkgName)
         scope.launch(dispatcher) {
             val localInfo = packageStoreInfoDao.get(pkgName)
-            if (localInfo == null) {
+            if (localInfo == null && count.getAndIncrement() < MAX_GET_FROM_STORE) {
                 appStoreService.getAppInfo(pkgName)
                     .onSuccess {
                         Log.d(TAG, "get appInfo=$it")
@@ -62,7 +68,13 @@ class AllAppsRepository(
                         packageStoreInfoDao.insert(it.toLocal())
                     }
                     .onFailure {
-                        Log.e(TAG, "failed to get appInfo from store", it)
+//                        Log.e(TAG, "failed to get appInfo from store", it)
+                        // if 404, save default to prevent retry
+                        if (it is ScraperError.HttpError && it.statusCode == 404) {
+                            Log.d(TAG, "statusCode==404, save default for $pkgName")
+                            packageStoreInfoDao.insert(
+                                LocalPackageStoreInfo(packageName = pkgName))
+                        }
                     }
             }
             // else if somehow outdated, then update
@@ -97,7 +109,8 @@ class AllAppsRepository(
                         )
                         shortcutQuery.setPackage(pkgName)
                         val shortcuts = launcherApps.getShortcuts(shortcutQuery, userHandle)
-                        if (shortcuts != null) {
+                        if (!shortcuts.isNullOrEmpty()) {
+                            Log.d(TAG, "userHandle=$userHandle for shortcuts=$shortcuts")
                             packageInfoMap[pkgName]?.shortcutInfos?.addAll(shortcuts)
                         }
                     }

@@ -10,5 +10,5 @@ interface AppsRepository {
     suspend fun getApps(): Map<String, PackageInfo>
     fun getAppsStream(): Flow<Map<String, PackageInfo>>
 
-    fun startActivity(activityInfo: ActivityInfo, viewBounds: Rect?, opts: Bundle?)
+    fun startActivity(activityInfo: ActivityInfo, viewBounds: Rect? = null, opts: Bundle? = null)
 }

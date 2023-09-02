@@ -2,9 +2,10 @@ package io.github.wangmuy.gptintentlauncher.chat
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import io.github.wangmuy.gptintentlauncher.allapps.source.AppsRepository
 import io.github.wangmuy.gptintentlauncher.chat.model.ChatMessage
-import io.github.wangmuy.gptintentlauncher.chat.source.ChatRepository
 import io.github.wangmuy.gptintentlauncher.chat.service.ChatService
+import io.github.wangmuy.gptintentlauncher.chat.source.ChatRepository
 import io.github.wangmuy.gptintentlauncher.util.Async
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -17,7 +18,8 @@ import kotlinx.coroutines.launch
 
 class ChatScreenViewModel(
     private val chatRepository: ChatRepository,
-    private val chatService: ChatService
+    private val chatService: ChatService,
+    private val appsRepository: AppsRepository
 ): ViewModel() {
     companion object {
     }
@@ -50,15 +52,28 @@ class ChatScreenViewModel(
                 content = sendText)
             chatRepository.addMessage(msg)
 
-            val sendResult = chatService.sendMessage(msg)
-            screenUiState.update {
-                it.copy(isSending = false)
-            }
-            val replyMsg = sendResult.getOrElse {e->
+            // start directly if exact match
+            val filterList = appsRepository.getApps().values
+                .flatMap { it.launcherActivities }
+                .filter { it.activityInfo.label == sendText }
+            val replyMsg = if (filterList.isNotEmpty()) {
+                val activityInfo = filterList.first()
+                appsRepository.startActivity(activityInfo)
                 ChatMessage(
                     role = ChatMessage.ROLE_APP,
-                    content = e.stackTraceToString()
+                    content = "open app $sendText"
                 )
+            } else {
+                val sendResult = chatService.sendMessage(msg)
+                screenUiState.update {
+                    it.copy(isSending = false)
+                }
+                sendResult.getOrElse {e->
+                    ChatMessage(
+                        role = ChatMessage.ROLE_APP,
+                        content = e.stackTraceToString()
+                    )
+                }
             }
             chatRepository.addMessage(replyMsg)
         }
