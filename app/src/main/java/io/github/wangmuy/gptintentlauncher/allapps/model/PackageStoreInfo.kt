@@ -7,7 +7,7 @@ class PackageStoreInfo(
     val descriptionHtml: String,
     val summary: String,
     val genre: String,
-    val familyGenre: String?,
+    val familyGenre: String? = null,
 //    val androidVersion: String?,
 //    val androidVersionText: String?,
 //    val genreId: String,

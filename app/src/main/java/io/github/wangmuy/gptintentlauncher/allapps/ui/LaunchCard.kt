@@ -23,19 +23,19 @@ import androidx.compose.ui.layout.boundsInWindow
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.unit.dp
 import com.google.accompanist.drawablepainter.rememberDrawablePainter
-import io.github.wangmuy.gptintentlauncher.allapps.model.ActivityInfo
+import io.github.wangmuy.gptintentlauncher.allapps.model.ActivityDetail
 
 @Composable
 fun LaunchCard(
-    activityInfo: ActivityInfo,
-    onClick: (activityInfo: ActivityInfo, viewBounds: android.graphics.Rect?) -> Unit
+    activityDetail: ActivityDetail,
+    onClick: (activityInfo: ActivityDetail, viewBounds: android.graphics.Rect?) -> Unit
 ) {
     var rootBounds by remember { mutableStateOf(Rect(Offset.Zero, Size.Zero)) }
 
     Row {
         Image(
             modifier = Modifier.size(48.dp),
-            painter = rememberDrawablePainter(drawable = activityInfo.icon),
+            painter = rememberDrawablePainter(drawable = activityDetail.icon),
             contentDescription = "appIcon"
         )
         Spacer(modifier = Modifier.width(8.dp))
@@ -48,7 +48,7 @@ fun LaunchCard(
                 }
                 .clickable {
                     onClick(
-                        activityInfo,
+                        activityDetail,
                         android.graphics.Rect(
                             rootBounds.left.toInt(),
                             rootBounds.top.toInt(),
@@ -58,7 +58,7 @@ fun LaunchCard(
                     )
                 },
             style = MaterialTheme.typography.headlineSmall,
-            text = activityInfo.label,
+            text = activityDetail.label,
         )
     }
 }

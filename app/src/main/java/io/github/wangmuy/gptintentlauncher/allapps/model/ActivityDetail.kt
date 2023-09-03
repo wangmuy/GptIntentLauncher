@@ -4,12 +4,13 @@ import android.content.pm.LauncherActivityInfo
 import android.graphics.drawable.Drawable
 
 /** from AppsRepository. one PackageInfo may contain multiple launcher ActivityInfo */
-class ActivityInfo(
-    val activityInfo: LauncherActivityInfo,
+class ActivityDetail(
+    val activityInfo: LauncherActivityInfo?,
+    val componentName: String = activityInfo?.componentName?.flattenToString() ?: "",
     val label: String,
-    val icon: Drawable
+    val icon: Drawable? = null
 ) {
     override fun toString(): String {
-        return "ActivityInfo(activityInfo=$activityInfo, label='$label')"
+        return "ActivityDetail(label='$label', activityInfo=$activityInfo, componentName='$componentName')"
     }
 }

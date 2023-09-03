@@ -22,7 +22,7 @@ val chatDataModule = module {
 }
 
 val chatServiceModule = module {
-    single<ChatService> { LangChainService() }
+    single<ChatService> { LangChainService(get()) }
 }
 
 val chatModule = module {

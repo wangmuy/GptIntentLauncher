@@ -1,12 +1,10 @@
 package io.github.wangmuy.gptintentlauncher.allapps.model
 
-import android.content.pm.ShortcutInfo
-
 /** from AppsRepository */
 class PackageInfo(
     val pkgName: String,
-    val launcherActivities: MutableList<ActivityInfo> = ArrayList(),
-    val shortcutInfos: MutableList<ShortcutInfo> = ArrayList(),
+    val launcherActivities: MutableList<ActivityDetail> = ArrayList(),
+    val shortcutInfos: MutableList<ShortcutDetail> = ArrayList(),
     var available: Boolean = true,
     var storeInfo: PackageStoreInfo? = null
 )

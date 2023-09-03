@@ -6,7 +6,7 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import io.github.wangmuy.gptintentlauncher.Const.DEBUG_TAG
-import io.github.wangmuy.gptintentlauncher.allapps.model.ActivityInfo
+import io.github.wangmuy.gptintentlauncher.allapps.model.ActivityDetail
 import io.github.wangmuy.gptintentlauncher.allapps.model.PackageInfo
 import io.github.wangmuy.gptintentlauncher.allapps.service.AppStoreService
 import io.github.wangmuy.gptintentlauncher.allapps.source.AppsRepository
@@ -34,8 +34,8 @@ class AllAppsScreenViewModel(
             initialValue = Async.Loading
         )
 
-    fun onStartActivity(activityInfo: ActivityInfo, viewBounds: Rect?, opts: Bundle? = null) {
-        Log.d(TAG, "onStartActivity $activityInfo, viewBounds=$viewBounds, opts=$opts")
-        allAppsRepository.startActivity(activityInfo, viewBounds, opts)
+    fun onStartActivity(activityDetail: ActivityDetail, viewBounds: Rect?, opts: Bundle? = null) {
+        Log.d(TAG, "onStartActivity $activityDetail, viewBounds=$viewBounds, opts=$opts")
+        allAppsRepository.startActivity(activityDetail, viewBounds, opts)
     }
 }

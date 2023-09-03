@@ -45,9 +45,9 @@ fun AllAppsScreen(
                     modifier = Modifier.fillMaxSize(),
                     verticalArrangement = Arrangement.spacedBy(8.dp),
                     state = listState) {
-                    items(launcherActivities, key = { it.activityInfo.componentName }) {
+                    items(launcherActivities, key = { it.componentName }) {
                         LaunchCard(
-                            activityInfo = it,
+                            activityDetail = it,
                             onClick = viewModel::onStartActivity
                         )
                     }

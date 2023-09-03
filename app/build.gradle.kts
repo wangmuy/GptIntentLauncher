@@ -80,6 +80,7 @@ dependencies {
 
     testImplementation(libs.androidx.room.testing)
     testImplementation(libs.junit4)
+    testImplementation(libs.org.json)
 
     androidTestImplementation(libs.androidx.test.ext)
     androidTestImplementation(libs.androidx.test.espresso.core)

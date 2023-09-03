@@ -9,7 +9,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.tooling.preview.Preview
 import io.github.wangmuy.gptintentlauncher.allapps.AllAppsScreenViewModel
-import io.github.wangmuy.gptintentlauncher.allapps.model.ActivityInfo
+import io.github.wangmuy.gptintentlauncher.allapps.model.ActivityDetail
 import io.github.wangmuy.gptintentlauncher.allapps.model.PackageStoreInfo
 import io.github.wangmuy.gptintentlauncher.allapps.model.PackageInfo
 import io.github.wangmuy.gptintentlauncher.allapps.service.AppStoreService
@@ -107,7 +107,7 @@ fun GreetingPreview() {
             return MutableStateFlow(HashMap())
         }
 
-        override fun startActivity(activityInfo: ActivityInfo, viewBounds: Rect?, opts: Bundle?) {
+        override fun startActivity(activityDetail: ActivityDetail, viewBounds: Rect?, opts: Bundle?) {
         }
     }
     val emptyAppStoreService = object: AppStoreService {

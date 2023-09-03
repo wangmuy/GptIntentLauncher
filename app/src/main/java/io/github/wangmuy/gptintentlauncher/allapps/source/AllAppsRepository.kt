@@ -1,6 +1,7 @@
 package io.github.wangmuy.gptintentlauncher.allapps.source
 
 import android.annotation.SuppressLint
+import android.content.ComponentName
 import android.content.Context
 import android.content.pm.LauncherApps
 import android.content.pm.LauncherApps.ShortcutQuery
@@ -12,8 +13,9 @@ import android.util.DisplayMetrics
 import android.util.Log
 import com.arthurivanets.googleplayscraper.util.ScraperError
 import io.github.wangmuy.gptintentlauncher.Const.DEBUG_TAG
-import io.github.wangmuy.gptintentlauncher.allapps.model.ActivityInfo
+import io.github.wangmuy.gptintentlauncher.allapps.model.ActivityDetail
 import io.github.wangmuy.gptintentlauncher.allapps.model.PackageInfo
+import io.github.wangmuy.gptintentlauncher.allapps.model.ShortcutDetail
 import io.github.wangmuy.gptintentlauncher.allapps.service.AppStoreService
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
@@ -88,13 +90,13 @@ class AllAppsRepository(
             Log.d(TAG, "refreshApps beg")
             val packageInfoMap = HashMap<String, PackageInfo>()
             for (userHandle in launcherApps.profiles) {
-                val allApps = launcherApps.getActivityList(null, userHandle)
-                for (app in allApps) {
-                    val pkgName = app.applicationInfo.packageName
-                    val activityInfo = ActivityInfo(
-                        app, app.label.toString(), app.getIcon(DisplayMetrics.DENSITY_DEFAULT))
+                val allActivityInfos = launcherApps.getActivityList(null, userHandle)
+                for (info in allActivityInfos) {
+                    val pkgName = info.applicationInfo.packageName
+                    val activityDetail = ActivityDetail(
+                        info, info.componentName.flattenToString(), info.label.toString(), info.getIcon(DisplayMetrics.DENSITY_DEFAULT))
                     packageInfoMap.getOrPut(pkgName) { makePackageInfo(pkgName) }
-                        .launcherActivities.add(activityInfo)
+                        .launcherActivities.add(activityDetail)
                 }
             }
             if (launcherApps.hasShortcutHostPermission()) {
@@ -111,7 +113,9 @@ class AllAppsRepository(
                         val shortcuts = launcherApps.getShortcuts(shortcutQuery, userHandle)
                         if (!shortcuts.isNullOrEmpty()) {
                             Log.d(TAG, "userHandle=$userHandle for shortcuts=$shortcuts")
-                            packageInfoMap[pkgName]?.shortcutInfos?.addAll(shortcuts)
+                            packageInfoMap[pkgName]?.shortcutInfos?.addAll(
+                                shortcuts.map { ShortcutDetail(it) }
+                            )
                         }
                     }
                 }
@@ -134,9 +138,9 @@ class AllAppsRepository(
         return observableApps
     }
 
-    override fun startActivity(activityInfo: ActivityInfo, viewBounds: Rect?, opts: Bundle?) {
+    override fun startActivity(activityDetail: ActivityDetail, viewBounds: Rect?, opts: Bundle?) {
         launcherApps.startMainActivity(
-            activityInfo.activityInfo.componentName,
+            ComponentName.unflattenFromString(activityDetail.componentName),
             Process.myUserHandle(), viewBounds, opts)
     }
 
@@ -149,12 +153,12 @@ class AllAppsRepository(
 
     private fun updatePackage(packageName: String, user: UserHandle?) {
         _appsMSF.update {map->
-            val apps = launcherApps.getActivityList(packageName, user)
+            val activityInfos = launcherApps.getActivityList(packageName, user)
             val activities =
                 map.getOrPut(packageName) { makePackageInfo(packageName) }.launcherActivities
             activities.clear()
-            activities.addAll(apps.map {app->
-                ActivityInfo(app, app.label.toString(), app.getIcon(DisplayMetrics.DENSITY_DEFAULT)) })
+            activities.addAll(activityInfos.map {info->
+                ActivityDetail(info, info.componentName.flattenToString(), info.label.toString(), info.getIcon(DisplayMetrics.DENSITY_DEFAULT)) })
             map
         }
     }

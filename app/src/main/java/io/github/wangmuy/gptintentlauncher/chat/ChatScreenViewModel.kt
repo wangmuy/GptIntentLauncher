@@ -55,10 +55,10 @@ class ChatScreenViewModel(
             // start directly if exact match
             val filterList = appsRepository.getApps().values
                 .flatMap { it.launcherActivities }
-                .filter { it.activityInfo.label == sendText }
+                .filter { it.label == sendText }
             val replyMsg = if (filterList.isNotEmpty()) {
-                val activityInfo = filterList.first()
-                appsRepository.startActivity(activityInfo)
+                val activityDetail = filterList.first()
+                appsRepository.startActivity(activityDetail)
                 ChatMessage(
                     role = ChatMessage.ROLE_APP,
                     content = "open app $sendText"
