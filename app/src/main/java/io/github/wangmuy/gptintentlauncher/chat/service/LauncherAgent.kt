@@ -4,6 +4,7 @@ import com.wangmuy.llmchain.agent.ZeroShotAgent
 import com.wangmuy.llmchain.chain.LLMChain
 import com.wangmuy.llmchain.llm.BaseLLM
 import com.wangmuy.llmchain.serviceprovider.openai.OpenAIChat
+import io.github.wangmuy.gptintentlauncher.Const.DEBUG_TAG
 import org.json.JSONObject
 
 class LauncherAgent(
@@ -13,6 +14,7 @@ class LauncherAgent(
 ): ZeroShotAgent(llmChain, allowedTools, toolRunArgs) {
 
     companion object {
+        private const val TAG = "LauncherAgent$DEBUG_TAG"
         private val PREFIX = """
 You are a smart android launcher assistant. Use the available tools to answer the user questions as best as you can. Only if you are not sure which available app to use, or if you find any missing required field information, you can then finish the final answer with asking the user to clarify. After the tool execution, you can observe the tool output and reply accordingly.
 
@@ -54,13 +56,13 @@ Thought: {agent_scratchpad}""".trimIndent()
         return try {
             super.extractToolAndInput(text)
         } catch (e: IllegalStateException) {
-            val extracted = REGEX_MD_JSON.find(text)?.groupValues?.get(1)!!
+            val extracted = REGEX_MD_JSON.find(text)?.groupValues?.get(1)
             val tool = try {
-                JSONObject(extracted).getString("name")
+                JSONObject(extracted!!).getString("name")
             } catch(e: Exception)  {
-                REGEX_TOOLUSE.find(text)?.groupValues?.get(1)!!.trim()
+                REGEX_TOOLUSE.find(text)?.groupValues?.get(1)?.trim() ?: finishToolName()
             }
-            Pair(tool, extracted)
+            Pair(tool, extracted ?: text)
         }
     }
 

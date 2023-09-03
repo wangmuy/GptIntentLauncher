@@ -2,7 +2,9 @@ package io.github.wangmuy.gptintentlauncher.setting.source
 
 import android.content.Context
 import android.content.SharedPreferences
+import android.util.Log
 import com.wangmuy.llmchain.llm.BaseLLM
+import io.github.wangmuy.gptintentlauncher.Const.DEBUG_TAG
 import io.github.wangmuy.gptintentlauncher.setting.model.ChatConfig
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -13,7 +15,7 @@ import kotlinx.coroutines.flow.update
 
 class SettingRepository(appContext: Context): SettingDataSource {
     companion object {
-        private const val TAG = "SettingRepository"
+        private const val TAG = "SettingRepository$DEBUG_TAG"
         private const val SP_NAME = "settings"
 
         private const val KEY_APIKEY = "apiKey"
@@ -95,11 +97,9 @@ class SettingRepository(appContext: Context): SettingDataSource {
                 newConfig.timeoutMillis = timeoutMillis
                 edit.putLong(KEY_TIMEOUT_MILLIS, timeoutMillis)
             }
-            if (config.proxy.isNotEmpty()) {
-                val proxy = config.proxy
-                newConfig.proxy = proxy
-                edit.putString(KEY_PROXY, proxy)
-            }
+            val proxy = config.proxy
+            newConfig.proxy = proxy
+            edit.putString(KEY_PROXY, proxy)
             if (config.llmConfig.isNotEmpty()) {
                 val llmConfig = config.llmConfig
                 newConfig.llmConfig = llmConfig

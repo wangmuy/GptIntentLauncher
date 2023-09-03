@@ -1,6 +1,7 @@
 package io.github.wangmuy.gptintentlauncher.chat.service
 
 import com.wangmuy.llmchain.agent.AgentExecutor
+import com.wangmuy.llmchain.agent.ZeroShotAgent
 import com.wangmuy.llmchain.callback.BaseCallbackManager
 import com.wangmuy.llmchain.llm.BaseLLM
 import com.wangmuy.llmchain.schema.BaseLanguageModel
@@ -24,11 +25,12 @@ class LauncherAgentExecutor(
         )
     }
 
+    var agent: ZeroShotAgent? = null
     var agentExecutor: AgentExecutor? = null
 
     private fun getExecutor(): AgentExecutor {
         if (agentExecutor == null) {
-            val agent = LauncherAgent.Builder().llm(llm).tools(tools).also {
+            agent = LauncherAgent.Builder().llm(llm).tools(tools).also {
                 if (callbackManager != null) {
                     it.callbackManager(callbackManager)
                 }
@@ -41,7 +43,7 @@ class LauncherAgentExecutor(
                 }
                 it.args(allArgs)
             }.build()
-            agentExecutor = AgentExecutor(agent, tools, callbackManager).also {
+            agentExecutor = AgentExecutor(agent!!, tools, callbackManager).also {
                 it.maxIterations = MAX_ITERATION
             }
         }
@@ -52,7 +54,7 @@ class LauncherAgentExecutor(
         return getExecutor().run(
             mapOf(
                 "input" to query,
-                "stop" to listOf("Observation:", "observation:")
+//                "stop" to listOf("Observation:", "observation:")
             )
         )
     }

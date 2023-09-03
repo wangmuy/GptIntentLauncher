@@ -12,4 +12,8 @@ data class ChatConfig(
         BaseLLM.REQ_MODEL_NAME to "gpt-3.5-turbo",
         BaseLLM.REQ_MAX_TOKENS to 1000
     )
-)
+) {
+    override fun toString(): String {
+        return "ChatConfig(apiKey='$apiKey', baseUrl='$baseUrl', timeoutMillis=$timeoutMillis, proxy='$proxy', llmConfig=$llmConfig)"
+    }
+}

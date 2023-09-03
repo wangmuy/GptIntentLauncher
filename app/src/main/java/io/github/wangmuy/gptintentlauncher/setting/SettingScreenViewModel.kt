@@ -3,8 +3,8 @@ package io.github.wangmuy.gptintentlauncher.setting
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.wangmuy.llmchain.llm.BaseLLM
-import io.github.wangmuy.gptintentlauncher.setting.model.ChatConfig
 import io.github.wangmuy.gptintentlauncher.chat.service.ChatService
+import io.github.wangmuy.gptintentlauncher.setting.model.ChatConfig
 import io.github.wangmuy.gptintentlauncher.setting.source.SettingDataSource
 import io.github.wangmuy.gptintentlauncher.setting.source.SettingRepository
 import io.github.wangmuy.gptintentlauncher.util.Async
@@ -44,9 +44,6 @@ class SettingScreenViewModel(
                 llmConfigStr = SettingRepository.llmConfigToString(config.llmConfig)
             )
         }
-        val proxy = config.proxy.ifEmpty { null }
-        chatService.setService(config.apiKey, config.baseUrl, config.timeoutMillis, proxy)
-        chatService.setLLMConfig(config.llmConfig)
     }
 
     private fun clearHintText() {
