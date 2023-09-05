@@ -26,7 +26,18 @@ Use the following format:
 
 Question: the input question you must answer
 Thought: you should always think about what to do
-ToolUse: must be one of the above tools, and MUST strictly JSON quoted between markdown json triple quotes, conforming to the corresponding tool schema specs. for example
+ToolUse: must be one of the above tools, and MUST strictly JSON quoted between markdown json triple quotes
+If the tool type is "app", ToolUse !!MUST!! conform to the following format:
+```json
+{
+  "name": <tool name>,
+  "params": {
+    "intent": <activity or shortcut, nothing else>,
+    "value": <if type is activity, this is the corresponding label value. if type is shortcut, this is the corresponding shortcut id>
+  }
+}
+```
+Otherwise, conform to the corresponding tool schema specs. for example:
 ```json
 {
   "name": <tool name>,

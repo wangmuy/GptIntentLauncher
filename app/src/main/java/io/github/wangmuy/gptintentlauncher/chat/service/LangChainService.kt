@@ -139,10 +139,10 @@ class LangChainService(
             agentExecutor = LauncherAgentExecutor(llm!!, tools, callbackManager)
         }
         tools.clear()
-        val selectedPkgs = listOf("com.android.camera2", "com.android.contacts", "com.android.deskclock", "org.ppsspp.ppsspp", "com.android.settings")
+//        val selectedPkgs = listOf("com.android.camera2", "com.android.contacts", "com.android.deskclock", "org.ppsspp.ppsspp", "com.android.settings")
         tools.addAll(
             appsRepository.getApps().values.map { PackageTool(it) }
-                .filter { it.packageInfo.pkgName in selectedPkgs }
+//                .filter { it.packageInfo.pkgName in selectedPkgs }
         )
         tools.add(ReplyTool())
         // agentExecutor.agent may not exist yet!

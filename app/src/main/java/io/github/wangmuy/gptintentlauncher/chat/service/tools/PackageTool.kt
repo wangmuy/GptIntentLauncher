@@ -33,7 +33,7 @@ class PackageTool(
             for (activity in packageInfo.launcherActivities) {
                 activities.put(JSONObject().apply {
                     put("label", activity.label)
-                    put("component", activity.componentName)
+//                    put("component", activity.componentName)
                 })
             }
             return activities.toString(INDENT)
@@ -61,24 +61,10 @@ class PackageTool(
             return """
 {
   "name": "${packageInfo.pkgName}",
+  "type": "app",
   "description": "${pkgDesc(packageInfo)}",
   "activities": ${activitiesDesc(packageInfo)},
-  "shortcuts": ${shortcutsDesc(packageInfo)},
-  "parameters": {
-    "type": "object",
-    "properties": {
-      "intent": {
-        "type": "string",
-        "description": "The selected intent to start, must be activity or shortcut",
-        "enum": ["activity", "shortcut"]
-      },
-      "value": {
-        "type": "string",
-        "description": "if type is activity, this is the corresponding component value. if type is shortcut, this is the corresponding shortcut id"
-      }
-    },
-    "required": ["type", "value"]
-  }
+  "shortcuts": ${shortcutsDesc(packageInfo)}
 }
             """.trimIndent()
         }
@@ -97,8 +83,8 @@ class PackageTool(
                 val value = params.getString("value")
                 when (type) {
                     "activity" -> {
-                        // value is component name
-                        val detail = packageInfo.launcherActivities.firstOrNull { it.componentName == value }
+                        // value is label
+                        val detail = packageInfo.launcherActivities.firstOrNull { it.label == value }
                         if (detail != null) {
                             appsRepository.startActivity(detail)
                             output += ", activity=$value"
