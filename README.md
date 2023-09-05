@@ -1,7 +1,7 @@
 # GptIntentLauncher
 This is a demo to use LLM like chatGPT to autonomously select and start the intent based on user query.
 
-**Let the GPT intent to be the real android intent!**
+**Let GPT/chatGPT choose and start the real android intent!**
 
 ## Architecture, Stack and Libraries
 * MVVM
@@ -17,12 +17,13 @@ Please watch the demo video below.
 https://github.com/wangmuy/GptIntentLauncher/assets/5346962/cdd47a3b-045f-4104-9b7a-6dcf2eeafae3
 
 ## TODO
-* tool specs make prompt too long, currently filter packages in `LangChainService.getAgentExecutor`, need rephrase
-* starting shortcut not implemented yet
-* search tool not implemented yet
-* chat history memories
-* more resilient `extractToolAndInput` maybe needed
-* better ui
+- [x] tool specs make prompt too long, currently filter packages in `LangChainService.getAgentExecutor`, need rephrase
+- [ ] maybe use router chains to choose package first, then activity/shortcut
+- [ ] starting shortcut not implemented yet
+- [ ] search tool not implemented yet
+- [ ] chat history memories
+- [ ] more resilient `extractToolAndInput` maybe needed
+- [ ] better ui
 
 ## License
 ```text
