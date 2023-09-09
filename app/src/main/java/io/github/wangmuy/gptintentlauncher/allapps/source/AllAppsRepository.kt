@@ -62,24 +62,30 @@ class AllAppsRepository(
         val pkgInfo = PackageInfo(pkgName)
         scope.launch(dispatcher) {
             val localInfo = packageStoreInfoDao.get(pkgName)
-            if (localInfo == null && count.getAndIncrement() < MAX_GET_FROM_STORE) {
-                appStoreService.getAppInfo(pkgName)
-                    .onSuccess {
-                        Log.d(TAG, "get appInfo=$it")
-                        pkgInfo.storeInfo = it
-                        packageStoreInfoDao.insert(it.toLocal())
-                    }
-                    .onFailure {
-//                        Log.e(TAG, "failed to get appInfo from store", it)
-                        // if 404, save default to prevent retry
-                        if (it is ScraperError.HttpError && it.statusCode == 404) {
-                            Log.d(TAG, "statusCode==404, save default for $pkgName")
-                            packageStoreInfoDao.insert(
-                                LocalPackageStoreInfo(packageName = pkgName))
+            if (localInfo == null) {
+                if (count.getAndIncrement() < MAX_GET_FROM_STORE) {
+                    appStoreService.getAppInfo(pkgName)
+                        .onSuccess {
+                            Log.d(TAG, "get appInfo=$it")
+                            pkgInfo.storeInfo = it
+                            packageStoreInfoDao.insert(it.toLocal())
                         }
-                    }
+                        .onFailure {
+//                        Log.e(TAG, "failed to get appInfo from store", it)
+                            // if 404, save default to prevent retry
+                            if (it is ScraperError.HttpError && it.statusCode == 404) {
+                                Log.d(TAG, "statusCode==404, save default for $pkgName")
+                                packageStoreInfoDao.insert(
+                                    LocalPackageStoreInfo(packageName = pkgName)
+                                )
+                            }
+                        }
+                }
+            } else {
+                val info = localInfo.toExternal()
+//                Log.d(TAG, "pkgInfo for $pkgName = $info")
+                pkgInfo.storeInfo = info
             }
-            // else if somehow outdated, then update
         }
         return pkgInfo
     }

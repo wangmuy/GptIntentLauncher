@@ -22,6 +22,7 @@ https://github.com/wangmuy/GptIntentLauncher/assets/5346962/cdd47a3b-045f-4104-9
 - [ ] maybe use router chains to choose package first, then activity/shortcut/other app specific intents
 - [ ] starting shortcut not implemented yet
 - [ ] chat history memories
+- [ ] currently scape no more than `MAX_GET_FROM_STORE` times from play store, maybe remove the limit and somehow notify the scape progress on ui
 - [ ] more resilient `extractToolAndInput` maybe needed
 - [ ] better ui
 
