@@ -12,20 +12,9 @@ import org.json.JSONObject
 
 class ReplyTool: BaseTool(
     name = "reply",
-    description = """{
-  "name": "$NAME",
-  "description": "Reply to the user",
-  "parameters": {
-    "type": "object",
-    "properties": {
-      "reply": {
-        "type": "string",
-        "description": "The content of the reply"
-      }
-    },
-    "required" : ["reply"]
-  }
-}"""
+    description = """
+{"name": "$NAME","description": "Reply to the user","parameters": {"type": "object","properties": {"reply": {"type": "string","description": "The content of the reply"}},"required" : ["reply"]}}
+"""
 ) {
     companion object {
         private const val TAG = "ReplyTool$DEBUG_TAG"

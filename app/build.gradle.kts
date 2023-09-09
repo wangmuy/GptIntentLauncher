@@ -77,6 +77,7 @@ dependencies {
     implementation(project(":google-play-scraper"))
     implementation(platform(libs.okhttp.bom))
     implementation(libs.okhttp)
+    implementation(libs.jsoup)
 
     testImplementation(libs.androidx.room.testing)
     testImplementation(libs.junit4)

@@ -18,9 +18,9 @@ https://github.com/wangmuy/GptIntentLauncher/assets/5346962/cdd47a3b-045f-4104-9
 
 ## TODO
 - [x] tool specs make prompt too long, currently filter packages in `LangChainService.getAgentExecutor`, need rephrase
-- [ ] maybe use router chains to choose package first, then activity/shortcut
+- [x] search tool: simple search using duckduckgo, default return 10 results
+- [ ] maybe use router chains to choose package first, then activity/shortcut/other app specific intents
 - [ ] starting shortcut not implemented yet
-- [ ] search tool not implemented yet
 - [ ] chat history memories
 - [ ] more resilient `extractToolAndInput` maybe needed
 - [ ] better ui

@@ -36,7 +36,7 @@ class PackageTool(
 //                    put("component", activity.componentName)
                 })
             }
-            return activities.toString(INDENT)
+            return activities.toString()
         }
 
         private fun shortcutsDesc(packageInfo: PackageInfo): String {
@@ -53,19 +53,13 @@ class PackageTool(
                     put("categories", categories)
                 })
             }
-            return shortcuts.toString(INDENT)
+            return shortcuts.toString()
         }
 
         fun getDescription(packageInfo: PackageInfo): String {
             // JSONObject output order may disturb llm, so write directly here
             return """
-{
-  "name": "${packageInfo.pkgName}",
-  "type": "app",
-  "description": "${pkgDesc(packageInfo)}",
-  "activities": ${activitiesDesc(packageInfo)},
-  "shortcuts": ${shortcutsDesc(packageInfo)}
-}
+{"name": "${packageInfo.pkgName}","type": "app","description": "${pkgDesc(packageInfo)}","activities": ${activitiesDesc(packageInfo)},"shortcuts": ${shortcutsDesc(packageInfo)}}
             """.trimIndent()
         }
     }

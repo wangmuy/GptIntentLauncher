@@ -29,27 +29,16 @@ Thought: you should always think about what to do
 ToolUse: must be one of the above tools, and MUST strictly JSON quoted between markdown json triple quotes
 If the tool type is "app", ToolUse !!MUST!! conform to the following format:
 ```json
-{
-  "name": <tool name>,
-  "params": {
-    "intent": <activity or shortcut, nothing else>,
-    "value": <if type is activity, this is the corresponding label value. if type is shortcut, this is the corresponding shortcut id>
-  }
-}
+{"name": "<tool name>","params": {"intent": "<activity or shortcut, nothing else>","value": "<if type is activity, this is the corresponding label value. if type is shortcut, this is the corresponding shortcut id>"}}
 ```
 Otherwise, conform to the corresponding tool schema specs. for example:
 ```json
-{
-  "name": <tool name>,
-  "params": {
-    <parameter keys and values according to the tool schema spec>
-  }
-}
+{"name": "<tool name>","params": {"<parameter keys and values according to the tool schema spec>"}}
 ```
 Observation: the result of the action
 ... (this Thought/ToolUse/Observation can repeat N times)
 Thought: I now know the final answer
-Final Answer: politely reply the final answer to the original input question and the observations, or continue to inquiry the user for more information.
+Final Answer: politely reply to the user the final answer to the original input question and the observations, or continue to inquiry the user for more information.
         """.trimIndent()
 
         private val SUFFIX = """
@@ -71,6 +60,7 @@ Thought: {agent_scratchpad}""".trimIndent()
             val tool = try {
                 JSONObject(extracted!!).getString("name")
             } catch(e: Exception)  {
+                // finishTool as the last resort
                 REGEX_TOOLUSE.find(text)?.groupValues?.get(1)?.trim() ?: finishToolName()
             }
             Pair(tool, extracted ?: text)

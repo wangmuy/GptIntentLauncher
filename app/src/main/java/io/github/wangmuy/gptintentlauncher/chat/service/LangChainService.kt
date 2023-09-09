@@ -10,6 +10,7 @@ import io.github.wangmuy.gptintentlauncher.allapps.source.AppsRepository
 import io.github.wangmuy.gptintentlauncher.chat.model.ChatMessage
 import io.github.wangmuy.gptintentlauncher.chat.service.tools.PackageTool
 import io.github.wangmuy.gptintentlauncher.chat.service.tools.ReplyTool
+import io.github.wangmuy.gptintentlauncher.chat.service.tools.SearchTool
 import io.github.wangmuy.gptintentlauncher.chat.source.ChatRepository
 import io.github.wangmuy.gptintentlauncher.setting.model.ChatConfig
 import io.github.wangmuy.gptintentlauncher.setting.source.SettingDataSource
@@ -139,11 +140,10 @@ class LangChainService(
             agentExecutor = LauncherAgentExecutor(llm!!, tools, callbackManager)
         }
         tools.clear()
-//        val selectedPkgs = listOf("com.android.camera2", "com.android.contacts", "com.android.deskclock", "org.ppsspp.ppsspp", "com.android.settings")
         tools.addAll(
             appsRepository.getApps().values.map { PackageTool(it) }
-//                .filter { it.packageInfo.pkgName in selectedPkgs }
         )
+        tools.add(SearchTool())
         tools.add(ReplyTool())
         // agentExecutor.agent may not exist yet!
         Log.d(TAG, "tools.size=${tools.size}")

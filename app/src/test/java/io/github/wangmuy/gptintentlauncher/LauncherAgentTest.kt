@@ -3,6 +3,7 @@ package io.github.wangmuy.gptintentlauncher
 import com.wangmuy.llmchain.callback.CallbackManager
 import com.wangmuy.llmchain.callback.DefaultCallbackHandler
 import com.wangmuy.llmchain.llm.BaseLLM
+import com.wangmuy.llmchain.schema.LLMResult
 import com.wangmuy.llmchain.serviceprovider.openai.OpenAIChat
 import com.wangmuy.llmchain.tool.BaseTool
 import io.github.wangmuy.gptintentlauncher.allapps.model.ActivityDetail
@@ -11,6 +12,7 @@ import io.github.wangmuy.gptintentlauncher.allapps.model.PackageStoreInfo
 import io.github.wangmuy.gptintentlauncher.chat.service.LauncherAgentExecutor
 import io.github.wangmuy.gptintentlauncher.chat.service.tools.PackageTool
 import io.github.wangmuy.gptintentlauncher.chat.service.tools.ReplyTool
+import io.github.wangmuy.gptintentlauncher.chat.service.tools.SearchTool
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNotNull
 import org.junit.Test
@@ -32,11 +34,9 @@ class LauncherAgentTest {
             println(text)
         }
 
-        override fun onChainEnd(outputs: Map<String, Any>, verbose: Boolean) {
+        override fun onLLMEnd(response: LLMResult, verbose: Boolean) {
             println("outputs=<<<<<")
-            for ((k, v) in outputs) {
-                println("key=$k, value=$v")
-            }
+            println(response.generations[0][0].text)
             println(">>>>>")
         }
     }
@@ -103,11 +103,14 @@ Observation:
                     genre = "Action"
                 )
             )),
+            SearchTool(proxy = PROXY),
             ReplyTool(),
         )
         val callbackManager = CallbackManager(mutableListOf(callbackHandler))
         val executor = LauncherAgentExecutor(llm, tools, callbackManager)
-        val output = executor.run("I want to play psp games")
+        // I want to play psp games
+        // Who won the 2022 world cup
+        val output = executor.run("Who won the 2022 world cup")
         println("output=$output")
     }
 }
