@@ -3,6 +3,7 @@ package io.github.wangmuy.gptintentlauncher.chat.service
 import android.util.Log
 import com.wangmuy.llmchain.callback.CallbackManager
 import com.wangmuy.llmchain.callback.DefaultCallbackHandler
+import com.wangmuy.llmchain.memory.ConversationBufferMemory
 import com.wangmuy.llmchain.serviceprovider.openai.OpenAIChat
 import com.wangmuy.llmchain.tool.BaseTool
 import io.github.wangmuy.gptintentlauncher.Const.DEBUG_TAG
@@ -63,6 +64,7 @@ class LangChainService(
     private var currentConfig: ChatConfig? = null
     private var agentExecutor: LauncherAgentExecutor? = null
     private val tools: MutableList<BaseTool> = mutableListOf()
+    private val memory = ConversationBufferMemory(memoryKey = "chat_history")
 
     private val callbackHandler = object: DefaultCallbackHandler() {
         override fun alwaysVerbose(): Boolean {
@@ -137,7 +139,7 @@ class LangChainService(
                 proxy = getProxy(proxy),
                 invocationParams = cfg.llmConfig
             )
-            agentExecutor = LauncherAgentExecutor(llm!!, tools, callbackManager)
+            agentExecutor = LauncherAgentExecutor(llm!!, tools, callbackManager, memory)
         }
         tools.clear()
         tools.addAll(

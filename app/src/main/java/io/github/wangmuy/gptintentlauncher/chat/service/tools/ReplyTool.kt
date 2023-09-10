@@ -13,7 +13,7 @@ import org.json.JSONObject
 class ReplyTool: BaseTool(
     name = "reply",
     description = """
-{"name": "$NAME","description": "Reply to the user","parameters": {"type": "object","properties": {"reply": {"type": "string","description": "The content of the reply"}},"required" : ["reply"]}}
+{"name": "$NAME","description": "Reply to the user, only after you have thought carefully and checked all the listing chat histories","parameters": {"type": "object","properties": {"reply": {"type": "string","description": "The content of the reply"}},"required" : ["reply"]}}
 """
 ) {
     companion object {
@@ -26,7 +26,7 @@ class ReplyTool: BaseTool(
         val scope = args?.get(LangChainService.KEY_COROUTINE_SCOPE) as? CoroutineScope
         var output = toolInput
         try {
-            val params = JSONObject(output).getJSONObject("params")
+            val params = JSONObject(toolInput).getJSONObject("params")
             output = params.getString("reply")
             if (chatRepository != null && scope != null) {
                 scope.launch {
@@ -38,7 +38,8 @@ class ReplyTool: BaseTool(
             }
         } catch (e: Exception) {
             Log.e(TAG, "toolInput=$toolInput", e)
+            output = toolInput.split('\n').last()
         }
-        return output
+        return "You replied: $output"
     }
 }

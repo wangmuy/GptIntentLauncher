@@ -1,8 +1,10 @@
 package io.github.wangmuy.gptintentlauncher.chat.service
 
+import com.wangmuy.llmchain.agent.Agent
 import com.wangmuy.llmchain.agent.ZeroShotAgent
 import com.wangmuy.llmchain.chain.LLMChain
 import com.wangmuy.llmchain.llm.BaseLLM
+import com.wangmuy.llmchain.schema.BaseMemory
 import com.wangmuy.llmchain.serviceprovider.openai.OpenAIChat
 import io.github.wangmuy.gptintentlauncher.Const.DEBUG_TAG
 import org.json.JSONObject
@@ -16,9 +18,11 @@ class LauncherAgent(
     companion object {
         private const val TAG = "LauncherAgent$DEBUG_TAG"
         private val PREFIX = """
-You are a smart android launcher assistant. Use the available tools to answer the user questions as best as you can. Only if you are not sure which available app to use, or if you find any missing required field information, you can then finish the final answer with asking the user to clarify. After the tool execution, you can observe the tool output and reply accordingly.
+You are a smart android launcher and AI assistant. Use the available tools and the below listing chat histories to answer the user questions as best as you can.
 
-You have the following tools to use:
+You have the following installed apps and tools to use:
+
+###Apps and Tools###
         """.trimIndent()
 
         private val FORMAT_INSTRUCTIONS = """
@@ -42,8 +46,13 @@ Final Answer: politely reply to the user the final answer to the original input 
         """.trimIndent()
 
         private val SUFFIX = """
-Remember: only use the reply tool if you are out of other options, and the final answer is not concluded yet!
-Begin!
+###Chat Histories###
+{chat_history}
+
+Remember: Only if you are not sure which available tool to use, or if you find any missing required field information, you can then finish the final answer with asking the user to clarify. After the tool execution, you can observe the tool output and reply accordingly.
+Remember: Only use the reply tool if you are out of other options, and the final answer is not concluded yet!
+
+###Begin!###
 Question: {input}
 Thought: {agent_scratchpad}""".trimIndent()
 
@@ -79,18 +88,22 @@ Thought: {agent_scratchpad}""".trimIndent()
         }
     }
 
-    class Builder: ZeroShotAgent.Builder() {
+    class Builder(private val memory: BaseMemory? = null): ZeroShotAgent.Builder() {
 
         override fun build(): ZeroShotAgent {
             applyParams()
             val pb = PromptBuilder()
-            val prompt = pb.tools(tools!!).build()
+            val inputVariables = mutableListOf("input", AGENT_SCRATCHPAD)
+            memory?.let { inputVariables.addAll(it.memoryVariables()) }
+            val prompt = pb.tools(tools!!)
+                .inputVariables(inputVariables)
+                .build()
             (llm as? OpenAIChat)?.also {openAI->
                 args?.get(BaseLLM.REQ_TEMPERATURE)?.also { openAI.invocationParams[BaseLLM.REQ_TEMPERATURE] = it }
                 args?.get(BaseLLM.REQ_MAX_TOKENS)?.also { openAI.invocationParams[BaseLLM.REQ_MAX_TOKENS] = it }
                 args?.get(BaseLLM.REQ_N)?.also { openAI.invocationParams[BaseLLM.REQ_N] = it }
             }
-            val llmChain = LLMChain(prompt, llm!!, callbackManager = callbackManager)
+            val llmChain = LLMChain(prompt, llm!!, callbackManager = callbackManager, memory = memory)
             val toolName = tools?.map { it.name } ?: emptyList()
             return LauncherAgent(llmChain, toolName)
         }

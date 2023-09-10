@@ -3,6 +3,7 @@ package io.github.wangmuy.gptintentlauncher
 import com.wangmuy.llmchain.callback.CallbackManager
 import com.wangmuy.llmchain.callback.DefaultCallbackHandler
 import com.wangmuy.llmchain.llm.BaseLLM
+import com.wangmuy.llmchain.memory.ConversationBufferMemory
 import com.wangmuy.llmchain.schema.LLMResult
 import com.wangmuy.llmchain.serviceprovider.openai.OpenAIChat
 import com.wangmuy.llmchain.tool.BaseTool
@@ -21,8 +22,8 @@ import java.net.Proxy
 
 class LauncherAgentTest {
     companion object {
-        private val APIKEY = "src/test/resources/private.properties".filePathAsProperties().getProperty("APIKEY")!!
-        private val PROXY: Proxy? = Proxy(Proxy.Type.SOCKS, InetSocketAddress("127.0.0.1", 1090))
+        val APIKEY = "src/test/resources/private.properties".filePathAsProperties().getProperty("APIKEY")!!
+        val PROXY: Proxy? = Proxy(Proxy.Type.SOCKS, InetSocketAddress("127.0.0.1", 1090))
     }
 
     private val callbackHandler = object: DefaultCallbackHandler() {
@@ -107,10 +108,13 @@ Observation:
             ReplyTool(),
         )
         val callbackManager = CallbackManager(mutableListOf(callbackHandler))
-        val executor = LauncherAgentExecutor(llm, tools, callbackManager)
+        val memory = ConversationBufferMemory(memoryKey = "chat_history")
+        val executor = LauncherAgentExecutor(llm, tools, callbackManager, memory)
         // I want to play psp games
         // Who won the 2022 world cup
-        val output = executor.run("Who won the 2022 world cup")
+        // Do you remember my name?
+        memory.saveContext(mapOf("input" to "Hi, my name is Bob"), mapOf("output" to "Hi Bob, how may I help you?"))
+        val output = executor.run("Do you remember my name?")
         println("output=$output")
     }
 }

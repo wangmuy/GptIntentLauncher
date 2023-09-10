@@ -13,8 +13,8 @@ class LauncherAgentExecutor(
     val llm: BaseLanguageModel,
     val tools: MutableList<BaseTool>,
     val callbackManager: BaseCallbackManager? = null,
-    val args: Map<String, Any>? = null,
-    val memory: BaseMemory? = null // todo memory, chat_history
+    val memory: BaseMemory? = null,
+    val args: Map<String, Any>? = null
 ) {
     companion object {
         private const val MAX_ITERATION = 4
@@ -30,7 +30,7 @@ class LauncherAgentExecutor(
 
     private fun getExecutor(): AgentExecutor {
         if (agentExecutor == null) {
-            agent = LauncherAgent.Builder().llm(llm).tools(tools).also {
+            val newAgent = LauncherAgent.Builder(memory).self().llm(llm).tools(tools).also {
                 if (callbackManager != null) {
                     it.callbackManager(callbackManager)
                 }
@@ -43,7 +43,8 @@ class LauncherAgentExecutor(
                 }
                 it.args(allArgs)
             }.build()
-            agentExecutor = AgentExecutor(agent!!, tools, callbackManager).also {
+            agent = newAgent
+            agentExecutor = AgentExecutor(newAgent, tools, callbackManager, memory = memory).also {
                 it.maxIterations = MAX_ITERATION
             }
         }
