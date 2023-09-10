@@ -18,7 +18,7 @@ class LauncherAgent(
     companion object {
         private const val TAG = "LauncherAgent$DEBUG_TAG"
         private val PREFIX = """
-You are a smart android launcher and AI assistant. Use the available tools and the below listing chat histories to answer the user questions as best as you can.
+You are a smart android launcher and AI assistant. Use the available tools and the below listing chat histories to answer the user questions as best as you can, or politely chat with the user.
 
 You have the following installed apps and tools to use:
 
@@ -49,7 +49,7 @@ Final Answer: politely reply to the user the final answer to the original input 
 ###Chat Histories###
 {chat_history}
 
-Remember: Only if you are not sure which available tool to use, or if you find any missing required field information, you can then finish the final answer with asking the user to clarify. After the tool execution, you can observe the tool output and reply accordingly.
+Remember: Only if you don't have the answer, or you are not sure which available tool to use, or if you find any missing required field information, you can then finish the final answer with asking the user to clarify. After the tool execution, you can observe the tool output and reply accordingly.
 Remember: Only use the reply tool if you are out of other options, and the final answer is not concluded yet!
 
 ###Begin!###

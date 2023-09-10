@@ -26,8 +26,14 @@ class ReplyTool: BaseTool(
         val scope = args?.get(LangChainService.KEY_COROUTINE_SCOPE) as? CoroutineScope
         var output = toolInput
         try {
-            val params = JSONObject(toolInput).getJSONObject("params")
-            output = params.getString("reply")
+            val root = JSONObject(toolInput)
+            val params = root.optJSONObject("params")
+            output = params?.optString("reply")
+                ?.ifEmpty { root.optString("reply") }
+                ?: root.optString("reply")
+            if (output.isEmpty()) {
+                throw IllegalArgumentException("input format error")
+            }
             if (chatRepository != null && scope != null) {
                 scope.launch {
                     chatRepository.addMessage(ChatMessage(

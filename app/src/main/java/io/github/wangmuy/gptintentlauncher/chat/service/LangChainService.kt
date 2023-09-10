@@ -145,7 +145,7 @@ class LangChainService(
         tools.addAll(
             appsRepository.getApps().values.map { PackageTool(it) }
         )
-        tools.add(SearchTool())
+        tools.add(SearchTool(takeNum = 5))
         tools.add(ReplyTool())
         // agentExecutor.agent may not exist yet!
         Log.d(TAG, "tools.size=${tools.size}")

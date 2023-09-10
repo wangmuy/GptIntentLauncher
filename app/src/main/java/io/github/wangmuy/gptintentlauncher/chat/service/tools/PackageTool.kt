@@ -3,6 +3,7 @@ package io.github.wangmuy.gptintentlauncher.chat.service.tools
 import android.util.Log
 import com.wangmuy.llmchain.tool.BaseTool
 import io.github.wangmuy.gptintentlauncher.Const.DEBUG_TAG
+import io.github.wangmuy.gptintentlauncher.allapps.model.ActivityDetail
 import io.github.wangmuy.gptintentlauncher.allapps.model.PackageInfo
 import io.github.wangmuy.gptintentlauncher.allapps.source.AppsRepository
 import io.github.wangmuy.gptintentlauncher.chat.model.ChatMessage
@@ -13,6 +14,8 @@ import kotlinx.coroutines.launch
 import org.json.JSONArray
 import org.json.JSONObject
 
+// todo add packageDetailTool, allow user add intent to packageDetail
+// LocalPackageIntent(packageName, minVersionCode, description, intentXml)
 class PackageTool(
     val packageInfo: PackageInfo
 ): BaseTool(
@@ -72,23 +75,36 @@ class PackageTool(
         var output = "started package ${packageInfo.pkgName}"
         if (appsRepository != null) {
             try {
-                val params = JSONObject(toolInput).getJSONObject("params")
-                val type = params.getString("intent")
-                val value = params.getString("value")
+                val root = JSONObject(toolInput)
+                val params = root.optJSONObject("params")
+                val type = params?.optString("intent")
+                    ?.ifEmpty { root.optString("intent") }
+                    ?: root.optString("intent")
+                val value = params?.optString("value")
+                    ?.ifEmpty { root.optString("value") }
+                    ?: root.optString("value")
+                var detail: ActivityDetail? = null
                 when (type) {
                     "activity" -> {
                         // value is label
-                        val detail = packageInfo.launcherActivities.firstOrNull { it.label == value }
-                        if (detail != null) {
-                            appsRepository.startActivity(detail)
-                            output += ", activity=$value"
-                        } else {
-                            throw IllegalStateException("component not found value=$value")
+                        detail = packageInfo.launcherActivities.firstOrNull { it.label == value }
+                        if (detail == null) {
+                            detail = packageInfo.launcherActivities.firstOrNull()
                         }
                     }
-                    else -> {
-                        throw IllegalStateException("type not supported yet type=$type") // todo
+                    "shortcut" -> {
+                        // todo
                     }
+                    else -> {
+                        // start the first main activity as default
+                        detail = packageInfo.launcherActivities.firstOrNull()
+                    }
+                }
+                if (detail != null) {
+                    appsRepository.startActivity(detail)
+                    output += ", activity=$value"
+                } else {
+                    throw IllegalStateException("component not found value=$value")
                 }
             } catch (e: Exception) {
                 Log.e(TAG, "onRun failed", e)

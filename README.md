@@ -19,9 +19,10 @@ https://github.com/wangmuy/GptIntentLauncher/assets/5346962/cdd47a3b-045f-4104-9
 ## TODO
 - [x] tool specs make prompt too long, currently filter packages in `LangChainService.getAgentExecutor`, need rephrase
 - [x] search tool: simple search using duckduckgo, default return 10 results
+- [x] chat history memories
+- [ ] chat history `ConversationBufferMemory` may eventually exceed token limit, need to select the last few histories or summarize the history
 - [ ] maybe use router chains to choose package first, then activity/shortcut/other app specific intents
 - [ ] starting shortcut not implemented yet
-- [ ] chat history memories
 - [ ] currently scape no more than `MAX_GET_FROM_STORE` times from play store, maybe remove the limit and somehow notify the scape progress on ui
 - [ ] more resilient `extractToolAndInput` maybe needed
 - [ ] better ui

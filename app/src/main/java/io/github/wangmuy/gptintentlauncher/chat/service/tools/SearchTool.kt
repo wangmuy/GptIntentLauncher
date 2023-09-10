@@ -25,7 +25,7 @@ class SearchTool(
 ) {
     companion object {
         private const val TAG = "SearchTool$DEBUG_TAG"
-        const val NAME = "search"
+        const val NAME = "InternetSearchEngine"
     }
 
     private val ddgs = DuckDuckGoSearch(proxy = proxy)
@@ -35,8 +35,14 @@ class SearchTool(
         val scope = args?.get(LangChainService.KEY_COROUTINE_SCOPE) as? CoroutineScope
         var output = "no result returned."
         try {
-            val params = JSONObject(toolInput).getJSONObject("params")
-            val query = params.getString("query")
+            val root = JSONObject(toolInput)
+            val params = root.optJSONObject("params")
+            val query = params?.optString("query")
+                ?.ifEmpty { root.optString("query") }
+                ?: root.optString("query")
+            if (query.isEmpty()) {
+                throw IllegalArgumentException("input format error")
+            }
             val results = ddgs.textLite(query).take(takeNum).toList()
             output = JSONArray().apply {
                 for (result in results) {
