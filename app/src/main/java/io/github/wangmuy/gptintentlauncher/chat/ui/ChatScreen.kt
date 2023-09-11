@@ -45,6 +45,7 @@ fun ChatScreen(
         EditBar(
             inputText = screenUiState.inputText,
             onTextChange = viewModel::onTextChange,
-            onSend = viewModel::onSendMessage)
+            onSend = viewModel::onSendMessage,
+            onClear = viewModel::onClearChatHistories)
     }
 }

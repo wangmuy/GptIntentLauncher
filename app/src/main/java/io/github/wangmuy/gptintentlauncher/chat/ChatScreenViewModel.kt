@@ -78,6 +78,12 @@ class ChatScreenViewModel(
             chatRepository.addMessage(replyMsg)
         }
     }
+
+    fun onClearChatHistories() {
+        viewModelScope.launch {
+            chatRepository.clearHistory()
+        }
+    }
 }
 
 data class ChatScreenUiState(

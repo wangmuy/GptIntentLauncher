@@ -4,6 +4,7 @@ import android.util.Log
 import com.wangmuy.llmchain.callback.CallbackManager
 import com.wangmuy.llmchain.callback.DefaultCallbackHandler
 import com.wangmuy.llmchain.memory.ConversationBufferMemory
+import com.wangmuy.llmchain.schema.LLMResult
 import com.wangmuy.llmchain.serviceprovider.openai.OpenAIChat
 import com.wangmuy.llmchain.tool.BaseTool
 import io.github.wangmuy.gptintentlauncher.Const.DEBUG_TAG
@@ -94,13 +95,9 @@ class LangChainService(
             }
         }
 
-        override fun onChainEnd(outputs: Map<String, Any>, verbose: Boolean) {
+        override fun onLLMEnd(response: LLMResult, verbose: Boolean) {
             scope.launch {
-                val msg = StringBuilder().apply {
-                    for ((k, v) in outputs) {
-                        append("key=$k, value=$v\n")
-                    }
-                }.toString()
+                val msg = response.generations[0][0].text
                 chatRepository.addMessage(ChatMessage(
                     role = ChatMessage.ROLE_APP,
                     content = msg

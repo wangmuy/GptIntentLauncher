@@ -85,6 +85,9 @@ fun GreetingPreview() {
 
         override suspend fun addMessage(message: ChatMessage) {
         }
+
+        override suspend fun clearHistory() {
+        }
     }
     val emptyChatService = object: ChatService {
         override fun setService(apiKey: String, baseUrl: String, timeoutMillis: Long, proxy: String?) {

@@ -35,4 +35,8 @@ class DefaultChatRepository(
     override suspend fun addMessage(message: ChatMessage) {
         localDataSource.insert(message.toLocal())
     }
+
+    override suspend fun clearHistory() {
+        localDataSource.clearAll()
+    }
 }

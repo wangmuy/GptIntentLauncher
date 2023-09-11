@@ -8,4 +8,5 @@ interface ChatRepository {
     fun getMessageStream(): Flow<List<ChatMessage>>
 
     suspend fun addMessage(message: ChatMessage)
+    suspend fun clearHistory()
 }

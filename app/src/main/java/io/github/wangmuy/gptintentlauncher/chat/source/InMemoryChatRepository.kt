@@ -43,4 +43,11 @@ class InMemoryChatRepository: ChatRepository {
             newMessages
         }
     }
+
+    override suspend fun clearHistory() {
+        _messagesMSF.update {_->
+            val newMessages = ArrayList<ChatMessage>()
+            newMessages
+        }
+    }
 }
