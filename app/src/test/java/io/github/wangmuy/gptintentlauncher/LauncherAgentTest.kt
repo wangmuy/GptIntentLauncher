@@ -108,7 +108,7 @@ Observation:
             ReplyTool(),
         )
         val callbackManager = CallbackManager(mutableListOf(callbackHandler))
-        val memory = ConversationBufferMemory(memoryKey = "chat_history")
+        val memory = ConversationBufferMemory(memoryKey = "chat_history", rounds = 5)
         val executor = LauncherAgentExecutor(llm, tools, callbackManager, memory)
         // I want to play psp games
         // Who won the 2022 world cup

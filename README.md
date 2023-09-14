@@ -21,11 +21,11 @@ https://github.com/wangmuy/GptIntentLauncher/assets/5346962/cdd47a3b-045f-4104-9
 - [x] search tool: simple search using duckduckgo, default return 10 results
 - [x] chat history memories
 - [x] Add clear chat histories
-- [ ] chat history `ConversationBufferMemory` may eventually exceed token limit, need to select the last few histories or summarize the history
+- [x] use `ConversationBufferMemory` with last 10 rounds of histories
 - [ ] maybe use router chains to choose package first, then activity/shortcut/other app specific intents
 - [ ] let user add/update/delete app specific intents dynamically!
 - [ ] starting shortcut not implemented yet
-- [ ] currently scape no more than `MAX_GET_FROM_STORE` times from play store, maybe remove the limit and somehow notify the scape progress on ui
+- [ ] currently scrape no more than `MAX_GET_FROM_STORE` times from play store, maybe remove the limit and somehow notify the scrape progress on ui
 - [ ] more resilient `extractToolAndInput` maybe needed
 - [ ] better ui
 

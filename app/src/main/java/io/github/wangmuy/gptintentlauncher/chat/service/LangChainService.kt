@@ -65,7 +65,7 @@ class LangChainService(
     private var currentConfig: ChatConfig? = null
     private var agentExecutor: LauncherAgentExecutor? = null
     private val tools: MutableList<BaseTool> = mutableListOf()
-    private val memory = ConversationBufferMemory(memoryKey = "chat_history")
+    private val memory = ConversationBufferMemory(memoryKey = "chat_history", rounds = 10)
 
     private val callbackHandler = object: DefaultCallbackHandler() {
         override fun alwaysVerbose(): Boolean {
