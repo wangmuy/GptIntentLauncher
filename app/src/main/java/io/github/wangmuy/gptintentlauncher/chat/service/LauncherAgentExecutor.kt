@@ -44,7 +44,10 @@ class LauncherAgentExecutor(
                 it.args(allArgs)
             }.build()
             agent = newAgent
-            agentExecutor = AgentExecutor(newAgent, tools, callbackManager, memory = memory).also {
+            // if memory is added to AgentExecutor, memory.save() will be called twice in Chain.prepOutputs():
+            // once in (AgentExecutor as Chain).invoke()
+            // the other in (LLMChain as Chain).predict() -> invoke()
+            agentExecutor = AgentExecutor(newAgent, tools, callbackManager/*, memory = memory*/).also {
                 it.maxIterations = MAX_ITERATION
             }
         }
