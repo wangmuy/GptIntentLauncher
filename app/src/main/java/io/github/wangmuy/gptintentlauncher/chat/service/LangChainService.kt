@@ -136,7 +136,19 @@ class LangChainService(
                 proxy = getProxy(proxy),
                 invocationParams = cfg.llmConfig
             )
-            agentExecutor = LauncherAgentExecutor(llm!!, tools, callbackManager, memory)
+            // todo refine llmchain-android
+            agentExecutor = LauncherAgentExecutor(llm!!, tools, callbackManager,
+                object: ConversationBufferMemory(memoryKey = "chat_history", rounds = 10) {
+                    override fun saveContext(
+                        inputs: Map<String, Any>,
+                        outputs: Map<String, String>
+                    ) {}
+
+                    override fun loadMemoryVariables(inputs: Map<String, Any>): Map<String, Any> {
+                        return memory.loadMemoryVariables(inputs)
+                    }
+                }
+            )
         }
         tools.clear()
         tools.addAll(
@@ -153,6 +165,9 @@ class LangChainService(
         message: ChatMessage
     ): Result<ChatMessage> = suspendRunCatching(dispatcher) {
         val reply = getAgentExecutor().run(message.content)
+        memory.saveContext(
+            mapOf("input" to message.content),
+            mapOf("output" to reply))
         ChatMessage(
             role = ChatMessage.ROLE_BOT,
             content = reply)
