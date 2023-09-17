@@ -13,4 +13,17 @@ class KotlinTest {
         mutableList.add("3")
         assertEquals(3, list.size)
     }
+
+    @Test
+    fun regexTest() {
+        val regex = "\"reply\"\\s*:\\s*\"(.+?)\"".toRegex()
+        val toolInput = """
+I should check the chat history to see if the user mentioned their name.
+ToolUse: reply
+{"reply": "Yes, your name is Bob."}
+        """.trimIndent()
+        val groupStr = regex.find(toolInput)?.groupValues?.get(1)?.trim()
+        assertNotNull(groupStr)
+        assertEquals("Yes, your name is Bob.", groupStr)
+    }
 }

@@ -42,7 +42,7 @@ Otherwise, conform to the corresponding tool schema specs. for example:
 Observation: the result of the action
 ... (this Thought/ToolUse/Observation can repeat N times)
 Thought: I now know the final answer
-Final Answer: politely reply to the user the final answer to the original input question and the observations, or continue to inquiry the user for more information.
+Final Answer: politely reply to the user the final answer to the original input question according to the chat histories and observations, or continue to inquiry the user for more information.
         """.trimIndent()
 
         private val SUFFIX = """

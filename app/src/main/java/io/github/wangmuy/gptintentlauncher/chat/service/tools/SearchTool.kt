@@ -26,6 +26,8 @@ class SearchTool(
     companion object {
         private const val TAG = "SearchTool$DEBUG_TAG"
         const val NAME = "InternetSearchEngine"
+
+        private val REGEX_QUERY = "\"query\"\\s*:\\s*\"(.+?)\"".toRegex()
     }
 
     private val ddgs = DuckDuckGoSearch(proxy = proxy)
@@ -35,11 +37,18 @@ class SearchTool(
         val scope = args?.get(LangChainService.KEY_COROUTINE_SCOPE) as? CoroutineScope
         var output = "no result returned."
         try {
-            val root = JSONObject(toolInput)
-            val params = root.optJSONObject("params")
-            val query = params?.optString("query")
-                ?.ifEmpty { root.optString("query") }
-                ?: root.optString("query")
+            var query = try {
+                val root = JSONObject(toolInput)
+                val params = root.optJSONObject("params")
+                params?.optString("query")
+                    ?.ifEmpty { root.optString("query") }
+                    ?: root.optString("query") ?: ""
+            } catch (e: Exception) {
+                ""
+            }
+            if (query.isEmpty()) {
+                query = REGEX_QUERY.find(toolInput)?.groupValues?.get(1)?.trim() ?: ""
+            }
             if (query.isEmpty()) {
                 throw IllegalArgumentException("input format error")
             }
